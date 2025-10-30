@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EvalyQuiz - Tableau de bord{% endblock %}</title>
+
+    <!-- Polices et icônes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Ton fichier CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_user.css') }}">
+</head>
+
+<body style="background-color: var(--light); font-family: 'Poppins', sans-serif;">
+
+    <!-- NAVBAR UTILISATEUR -->
+    <header style="background-color: var(--primary); padding: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <div class="container" style="display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:auto;">
+            
+            <!-- Logo -->
+            <div style="display:flex; align-items:center; gap:10px;">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" style="height:40px;">
+                <h1 style="color:var(--light); font-weight:700; font-size:1.4rem;">EvalyQuiz</h1>
+            </div>
+
+            <!-- Liens du menu -->
+            <nav style="display:flex; gap:25px; align-items:center;">
+                <a href="{{ url_for('user') }}" style="color:var(--light); text-decoration:none; font-weight:600;">Tableau de bord</a>
+                <a href="" style="color:var(--light); text-decoration:none; font-weight:600;">Mes examens</a>
+                <a href="" style="color:var(--light); text-decoration:none; font-weight:600;">Analyses</a>
+                <a href="" style="color:var(--light); text-decoration:none; font-weight:600;">Mes classes</a>
+            </nav>
+
+            <!-- Profil utilisateur -->
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="text-align:right; color:var(--light);">
+                    <p style="margin:0; font-weight:600;"></p>
+                    <small style="opacity:0.8;"></small>
+                </div>
+                <img src="" alt="Avatar" style="width:45px; height:45px; border-radius:50%; border:2px solid var(--secondary); object-fit:cover;">
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENU DYNAMIQUE -->
+    <main style="padding:30px 0;">
+        <div class="container" style="max-width:1200px; margin:auto;">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer style="background-color: var(--primary-dark); color: var(--light); padding: 20px; text-align:center;">
+        <p>&copy; 2025 ExamOnline. Tous droits réservés.</p>
+    </footer>
+
+</body>
+</html>

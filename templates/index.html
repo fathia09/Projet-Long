@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Section Fonctionnalités -->
+<section class="features">
+    <div class="container">
+        <div class="section-title">
+            <h2>Nos fonctionnalités</h2>
+            <p>Découvrez comment ExamOnline simplifie la gestion et le passage de vos examens en ligne</p>
+        </div>
+        <div class="feature-content" style="display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between;">
+            
+            <div class="feature-card" style="flex:1 1 300px; padding:20px; background-color:var(--light); border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.08);">
+                <div class="feature-icon" style="font-size:2rem; color:var(--secondary); margin-bottom:15px;">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h3>Création d'examens</h3>
+                <p>Créez facilement des examens en ligne avec des questions variées, des délais et des paramètres de sécurité personnalisables.</p>
+                <a href="#" class="btn-link" style="color:var(--primary); font-weight:600; margin-top:10px; display:inline-block;">En savoir plus <i class="fas fa-arrow-right"></i></a>
+            </div>
+            
+            <div class="feature-card" style="flex:1 1 300px; padding:20px; background-color:var(--light); border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.08);">
+                <div class="feature-icon" style="font-size:2rem; color:var(--secondary); margin-bottom:15px;">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Examen en temps réel</h3>
+                <p>Les étudiants passent leurs examens en ligne en toute sécurité, avec chronométrage automatique et contrôle des réponses en temps réel.</p>
+                <a href="#" class="btn-link" style="color:var(--primary); font-weight:600; margin-top:10px; display:inline-block;">En savoir plus <i class="fas fa-arrow-right"></i></a>
+            </div>
+            
+            <div class="feature-card" style="flex:1 1 300px; padding:20px; background-color:var(--light); border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.08);">
+                <div class="feature-icon" style="font-size:2rem; color:var(--secondary); margin-bottom:15px;">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <h3>Analyse et rapports</h3>
+                <p>Obtenez des rapports détaillés sur les performances des candidats, les taux de réussite et identifiez les domaines à améliorer.</p>
+                <a href="#" class="btn-link" style="color:var(--primary); font-weight:600; margin-top:10px; display:inline-block;">En savoir plus <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}
