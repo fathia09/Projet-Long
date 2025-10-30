@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Inscription - ExamOnline{% endblock %}
+
+{% block content %}
+<section class="features" style="padding: 60px 0; background-color: var(--light);">
+    <div class="container" style="max-width:600px; margin:auto;">
+        <div class="section-title" style="text-align:center; margin-bottom:30px;">
+            <h2>Inscription</h2>
+            <p>Créez votre compte pour accéder aux examens en ligne.</p>
+        </div>
+
+        <form action="{{ url_for('inscription') }}" method="POST" style="background-color:var(--light); padding:30px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+            
+            <!-- Nom -->
+            <div class="form-group" style="margin-bottom:15px;">
+                <label for="nom" style="font-weight:600;">Nom</label>
+                <input type="text" id="nom" name="nom" class="form-control" placeholder="Votre nom" required style="width:100%; padding:10px; border-radius:5px; border:1px solid #ccc;">
+            </div>
+
+            <!-- Prénom -->
+            <div class="form-group" style="margin-bottom:15px;">
+                <label for="prenom" style="font-weight:600;">Prénom</label>
+                <input type="text" id="prenom" name="prenom" class="form-control" placeholder="Votre prénom" required style="width:100%; padding:10px; border-radius:5px; border:1px solid #ccc;">
+            </div>
+
+            <!-- Email -->
+            <div class="form-group" style="margin-bottom:15px;">
+                <label for="email" style="font-weight:600;">Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="Votre email" required style="width:100%; padding:10px; border-radius:5px; border:1px solid #ccc;">
+            </div>
+
+            <!-- Id_role -->
+            <div class="form-group" style="margin-bottom:15px;">
+                <label for="id_role" style="font-weight:600;">Rôle</label>
+                <select id="id_role" name="id_role" class="form-control" required style="width:100%; padding:10px; border-radius:5px; border:1px solid #ccc;">
+                    <option value="">Sélectionnez votre rôle</option>
+                    <option value="enseignant">Enseignant</option>
+                    <option value="eleve">Élève</option>
+                </select>
+            </div>
+
+            <!-- Mot de passe -->
+            <div class="form-group" style="margin-bottom:20px;">
+                <label for="password" style="font-weight:600;">Mot de passe</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Mot de passe" required style="width:100%; padding:10px; border-radius:5px; border:1px solid #ccc;">
+            </div>
+
+            <!-- Bouton -->
+            <div style="text-align:center;">
+                <button type="submit" class="btn btn-primary" style="padding:12px 28px; border-radius:30px; font-weight:600; background-color:var(--secondary); color:var(--light); border:none; cursor:pointer;">S'inscrire</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

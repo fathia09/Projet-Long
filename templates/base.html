@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ExamOnline - Plateforme d'examens en ligne sécurisés.">
+    <meta name="author" content="ExamOnline Team">
+    <title>{% block title %}EvalyQuiz{% endblock %}</title>
+    
+    <!-- Polices et icônes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Styles CSS -->
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+
+</head>
+
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo-container">
+                <img src="/static/images/logo.png" alt="ExamOnline Logo">
+                <h1>EvalyQuiz</h1>
+            </div>
+            <nav>
+                <a href="/exams" class="nav-link"><i class="fas fa-file-alt"></i> Examens</a>
+                <a href="/guide" class="nav-link"><i class="fas fa-book"></i> Guide d'utilisation</a>
+                <div class="search-container">
+                    <input type="text" placeholder="Rechercher un examen..." aria-label="Rechercher">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="connexion-container">
+                    <a href="/connexion"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Section Héro -->
+        <section class="hero">
+            <div class="container">
+                <h2>Passez vos examens en ligne en toute sécurité</h2>
+                <p>EvalyQuiz vous offre une plateforme sécurisée et intuitive pour gérer et passer vos examens en ligne, où que vous soyez.</p>
+                <div class="hero-buttons">
+                    <a href="/inscription" class="btn btn-primary">Créer un compte</a>
+                    <a href="/about" class="btn btn-secondary">En savoir plus</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Espace pour le contenu dynamique -->
+        <div class="container my-5">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-column">
+                <h3>EvalyQuiz</h3>
+                <p>Plateforme sécurisée pour passer et gérer vos examens en ligne efficacement.</p>
+                <p><i class="fas fa-envelope"></i></p>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Liens utiles</h3>
+                <ul>
+                    <li><a href="/exams"><i class="fas fa-file-alt"></i> Examens</a></li>
+                    <li><a href="/contact"><i class="fas fa-envelope"></i> Contact</a></li>
+                    <li><a href="/about"><i class="fas fa-info-circle"></i> À propos</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Suivez-nous</h3>
+                <p>Restez informé des dernières actualités et mises à jour de ExamOnline.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2025 EvalyQuiz. Tous droits réservés.</p>
+        </div>
+    </footer>
+</body>
+</html>
