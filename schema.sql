@@ -15,6 +15,7 @@ CREATE TABLE user (
     email VARCHAR(255) UNIQUE NOT NULL,
     id_role INTEGER NOT NULL,
     date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    password_hash TEXT NOT NULL,
     FOREIGN KEY (id_role) REFERENCES role (id)
 );
 
@@ -41,7 +42,7 @@ CREATE TABLE quiz (
 CREATE TABLE question (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     enonce TEXT NOT NULL,
-    type TEXT CHECK (type IN ('QCM', 'VraiFaux', 'Texte')) NOT NULL,
+    type TEXT CHECK (type IN ('QCM', 'Vrai/Faux')) NOT NULL,
     bareme FLOAT DEFAULT 1.0,
     id_quiz INTEGER NOT NULL,
     FOREIGN KEY (id_quiz) REFERENCES quiz (id)
