@@ -23,6 +23,10 @@ def user():
 def etudiant():
     return render_template('interface_etudiant.html')
 
+@app.route('/resultat_etudiant')
+def resultat_etudiant():
+    return render_template('resultats_etu.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

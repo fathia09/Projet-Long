@@ -1,0 +1,28 @@
+{% extends 'Base_etudiant.html' %}
+{% block title %}Tableau de bord - Étudiant{% endblock %}
+
+{% block content %}
+<section class="student-interface" style="display:flex; flex-wrap:wrap; gap:10px; align-items:flex-start;">
+    <div class="card" style="width: 18rem; border: 1px solid #007bff;">
+        <div class="card-body">
+            <h5 class="card-title">Programmation Bas niveau</h5>
+            <p class="card-text">18/20</p>
+            <a href="#" class="btn btn-primary">Voir correction</a>
+        </div>
+    </div>
+    <div class="card" style="width: 18rem; border: 1px solid #28a745;">
+        <div class="card-body">
+            <h5 class="card-title">Développement Web</h5>
+            <p class="card-text">16/20</p>
+            <a href="#" class="btn btn-primary">Voir correction</a>
+        </div>
+    </div>
+    <div class="card" style="width: 18rem; border: 1px solid #dc3545;">
+        <div class="card-body">
+            <h5 class="card-title">Intelligence Artificielle</h5>
+            <p class="card-text">19/20</p>
+            <a href="#" class="btn btn-primary">Voir correction</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
