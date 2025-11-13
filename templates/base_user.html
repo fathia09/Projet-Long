@@ -30,9 +30,9 @@
             <!-- Liens du menu -->
             <nav style="display:flex; gap:25px; align-items:center;">
                 <a href="{{ url_for('user') }}" style="color:var(--light); text-decoration:none; font-weight:600;">Tableau de bord</a>
-                <a href="" style="color:var(--light); text-decoration:none; font-weight:600;">Mes examens</a>
-                <a href="" style="color:var(--light); text-decoration:none; font-weight:600;">Analyses</a>
-                <a href="" style="color:var(--light); text-decoration:none; font-weight:600;">Mes classes</a>
+                <a href="{{ url_for('enseignant') }}" style="color:var(--light); text-decoration:none; font-weight:600;">Mes examens</a>
+                <a href="{{ url_for('statistique') }}" style="color:var(--light); text-decoration:none; font-weight:600;">Analyses</a>
+                <a href="{{ url_for('classe') }}" style="color:var(--light); text-decoration:none; font-weight:600;">Mes classes</a>
             </nav>
 
             <!-- Profil utilisateur -->

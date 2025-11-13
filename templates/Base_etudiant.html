@@ -32,13 +32,13 @@
                 <a href="{{ url_for('etudiant') }}" style="color:var(--light); text-decoration:none; font-weight:600;">
                     <i class="fa-solid fa-table-columns"></i> Tableau de bord
                 </a>
-                <a href="" style="color:var(--light); text-decoration:none; font-weight:600;">
+                <a href="{{ url_for('etudiant') }}" style="color:var(--light); text-decoration:none; font-weight:600;">
                     <i class="fa-solid fa-book-open-reader"></i> Mes examens
                 </a>
-                <a href="" style="color:var(--light); text-decoration:none; font-weight:600;">
+                <a href="{{ url_for('resultat_etudiant') }}" style="color:var(--light); text-decoration:none; font-weight:600;">
                     <i class="fa-solid fa-chart-line"></i> Résultats
                 </a>
-                <a href="" style="color:var(--light); text-decoration:none; font-weight:600;">
+                <a href="{{ url_for('profile-etudiant') }}" style="color:var(--light); text-decoration:none; font-weight:600;">
                     <i class="fa-solid fa-user"></i> Mon profil
                 </a>
             </nav>

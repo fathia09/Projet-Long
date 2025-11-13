@@ -1,0 +1,46 @@
+{% extends 'Base_etudiant.html' %}
+{% block title %}Profil - Étudiant{% endblock %}
+
+{% block content %}
+<section class="student-profile" style="display:flex; flex-wrap:wrap; gap:20px; align-items:flex-start;">
+    <div style="flex:1 1 45%; min-width:300px;">
+        <h2>Informations personnelles</h2>
+        <div class="card" style="padding:20px;">
+            <p><strong>Nom:</strong> nom</p>
+            <p><strong>Prénom:</strong> prenom</p>
+            <p><strong>Email:</strong> mail</p>
+            <p><strong>Numéro étudiant:</strong> </p>
+        </div>
+    </div>
+</div>
+
+<div style="flex:1 1 45%; min-width:300px;">
+    <h2>Informations académiques</h2>
+    <div class="card" style="padding:20px;">
+        <p><strong>Filière:</strong> matiere</p>
+        <p><strong>Niveau:</strong> Niveau</p>
+        <p><strong>Moyenne générale:</strong> Moyenne</p>
+        
+        <h3 style="margin-top:20px;">Matières</h3>
+        <table style="width:100%; border-collapse:collapse;">
+            <thead>
+                <tr style="border-bottom:2px solid #ddd;">
+                    <th style="padding:10px; text-align:left;">Matière</th>
+                    <th style="padding:10px; text-align:center;">Note</th>
+                    <th style="padding:10px; text-align:center;">Moyenne</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for matiere in matieres %}
+                <tr style="border-bottom:1px solid #eee;">
+                    <td style="padding:10px;">{{ matiere.nom }}</td>
+                    <td style="padding:10px; text-align:center;">note </td>
+                    <td style="padding:10px; text-align:center;">moyenne </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</section>
+{% endblock %}

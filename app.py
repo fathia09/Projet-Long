@@ -27,6 +27,26 @@ def etudiant():
 def resultat_etudiant():
     return render_template('resultats_etu.html')
 
+@app.route('/examen-etudiant')
+def examen_etudiant():
+    return render_template('examen_etudiant.html')
+
+@app.route('/enseignant')
+def enseignant():
+    return render_template('examen-enseignant.html')
+
+@app.route('/profile-etudiant')
+def profile_etudiant():
+    return render_template('profil_etu.html')
+
+@app.route('/classe')
+def classe():
+    return render_template('Classe.html')
+
+@app.route('/statistique')
+def statistique():
+    return render_template('Statistique.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
