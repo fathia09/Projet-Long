@@ -32,6 +32,7 @@ CREATE TABLE quiz (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     titre VARCHAR(200) NOT NULL,
     description TEXT,
+    status TEXT CHECK (status IN ('en attente', 'terminé')),
     id_user TEXT NOT NULL,
     id_matiere INTEGER NOT NULL,
     FOREIGN KEY (id_user) REFERENCES user (id),
@@ -50,6 +51,14 @@ CREATE TABLE question (
 
 -- Table des réponses
 CREATE TABLE reponse (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_question INTEGER NOT NULL,
+    texte TEXT NOT NULL,
+    FOREIGN KEY (id_question) REFERENCES question (id)
+);
+
+-- Table des réponses étudiants
+CREATE TABLE reponse_etudiant(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     id_question INTEGER NOT NULL,
     texte TEXT NOT NULL,
