@@ -4,12 +4,12 @@
 -- Table des rôles
 CREATE TABLE role (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_role TEXT CHECK (user_role IN ('admin', 'enseignant', 'etudiant')) NOT NULL
+    user_role VARCHAR(255) CHECK (user_role IN ('admin', 'enseignant', 'etudiant')) NOT NULL
 );
 
 -- Table des utilisateurs
 CREATE TABLE user (
-    id TEXT PRIMARY KEY,
+    id VARCHAR(255) PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE user (
 -- Table des matières
 CREATE TABLE matiere (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    id_user TEXT NOT NULL,
+    id_user VARCHAR(255) NOT NULL,
     nom VARCHAR(100) NOT NULL,
     FOREIGN KEY (id_user) REFERENCES user (id)
 );
@@ -33,7 +33,7 @@ CREATE TABLE quiz (
     titre VARCHAR(200) NOT NULL,
     description TEXT,
     status TEXT CHECK (status IN ('en attente', 'terminé')),
-    id_user TEXT NOT NULL,
+    id_user VARCHAR(255) NOT NULL,
     id_matiere INTEGER NOT NULL,
     FOREIGN KEY (id_user) REFERENCES user (id),
     FOREIGN KEY (id_matiere) REFERENCES matiere (id)
