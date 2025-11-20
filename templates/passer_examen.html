@@ -1,0 +1,89 @@
+{% extends 'Base_etudiant.html' %}
+{% block title %}Tableau de bord - Étudiant{% endblock %}
+
+{% block content %}
+<section class="student-interface">
+    <header class="exam-header">
+        <h2>Passer l'examen : Analyse Mathématique</h2>
+        <p class="meta">Durée : 1h30 — Début : 03/11/2025 10:00</p>
+    </header>
+
+    <form id="exam-form" method="post" action="/exams/submit" enctype="multipart/form-data" data-duration-minutes="90">
+        <!-- Remplacez exam_id par l'identifiant réel de l'examen -->
+        <input type="hidden" name="exam_id" value="12345">
+
+        <div class="exam-controls">
+            <div id="timer" aria-live="polite">01:30:00</div>
+            <p class="instructions">Répondez aux questions ci‑dessous puis cliquez sur "Terminer et envoyer".</p>
+        </div>
+
+        <ol class="questions">
+            <!-- Question 1 : QCM (radio) -->
+            <li class="question" data-question-id="1">
+                <p class="q-text"><strong>1.</strong> Quel est le domaine de définition de f(x) = 1/x ?</p>
+                <div class="options">
+                    <label><input type="radio" name="q_1" value="a"> R</label>
+                    <label><input type="radio" name="q_1" value="b"> R \ {0}</label>
+                    <label><input type="radio" name="q_1" value="c"> [0, ∞)</label>
+                </div>
+            </li>
+
+            <!-- Question 2 : Choix multiples (checkbox) -->
+            <li class="question" data-question-id="2">
+                <p class="q-text"><strong>2.</strong> Sélectionnez les propriétés vraies pour sin(x) :</p>
+                <div class="options">
+                    <label><input type="checkbox" name="q_2[]" value="periodique"> périodique</label>
+                    <label><input type="checkbox" name="q_2[]" value="bornée"> bornée</label>
+                    <label><input type="checkbox" name="q_2[]" value="monotone"> monotone</label>
+                </div>
+            </li>
+
+            <!-- Question 3 : Réponse courte / développement -->
+            <li class="question" data-question-id="3">
+                <p class="q-text"><strong>3.</strong> Expliquez brièvement la méthode des dérivées partielles :</p>
+                <textarea name="q_3" rows="5" placeholder="Votre réponse (limite 500 mots)..."></textarea>
+            </li>
+
+            <!-- Question 4 : Téléversement éventuel -->
+            <li class="question" data-question-id="4">
+                <p class="q-text"><strong>4.</strong> Si demandé, téléversez votre fichier de résolution :</p>
+                <input type="file" name="q_4" accept=".pdf,.doc,.docx,.png,.jpg">
+            </li>
+        </ol>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Terminer et envoyer</button>
+            <button type="button" id="btn-save" class="btn-secondary">Enregistrer et continuer</button>
+        </div>
+    </form>
+
+    <script>
+        // Minuscule script non‑obligatoire : timer basé sur data-duration-minutes
+        (function(){
+            const form = document.getElementById('exam-form');
+            const timerEl = document.getElementById('timer');
+            const minutes = parseInt(form.getAttribute('data-duration-minutes') || '90', 10);
+            let remaining = minutes * 60;
+            function fmt(s){ const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=s%60; return [h,m,sec].map(x=>String(x).padStart(2,'0')).join(':'); }
+            timerEl.textContent = fmt(remaining);
+            const tick = setInterval(()=>{
+                remaining--;
+                timerEl.textContent = fmt(remaining);
+                if(remaining<=0){ clearInterval(tick); timerEl.textContent='00:00:00'; form.submit(); }
+            },1000);
+
+            // Simple sauvegarde locale
+            document.getElementById('btn-save').addEventListener('click', function(){
+                const data = new FormData(form);
+                const snap = {};
+                for(const [k,v] of data.entries()){
+                    if(v instanceof File) continue;
+                    if(snap[k]) snap[k] = [].concat(snap[k], v); else snap[k] = v;
+                }
+                localStorage.setItem('exam_draft_' + form.querySelector('input[name="exam_id"]').value, JSON.stringify(snap));
+                alert('Brouillon enregistré localement.');
+            });
+        })();
+    </script>
+</section>
+{% endblock %}
