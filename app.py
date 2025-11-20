@@ -47,6 +47,18 @@ def classe():
 def statistique():
     return render_template('Statistique.html')
 
+@app.route('/ajouter-examen')
+def ajouter_examen():
+    return render_template('creer_quiz.html')
+
+@app.route('/passer-examen')
+def passer_examen():
+    return render_template('passer_examen.html')
+
+@app.route('/admin-dashboard')
+def admin_dashboard():
+    return render_template('admin.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
