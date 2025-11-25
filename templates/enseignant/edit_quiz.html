@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Éditer le quiz{% endblock %}
+
+{% block content %}
+<div class="quiz-edit-container">
+    <h2>Éditer: {{ quiz.titre }}</h2>
+    
+    <!-- Questions existantes -->
+    <section class="existing-questions">
+        <h3>Questions existantes</h3>
+        {% for item in questions %}
+        <div class="question">
+            <div class="question-header">
+                <strong>{{ item.question.enonce }}</strong>
+                <span>({{ item.question.type }}, {{ item.question.bareme }} pts, {{ item.question.duree }}s)</span>
+            </div>
+            
+            {% if item.choix %}
+            <ul class="choices-list">
+                {% for c in item.choix %}
+                <li>{{ c.texte }} {% if c.est_correct %} ✓{% endif %}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </section>
+
+    <!-- Formulaire d'ajout de question -->
+    <section class="add-question">
+        <h3>Ajouter une question</h3>
+        
+        <form method="post">
+            <input type="hidden" name="action" value="add_question">
+            
+            <textarea name="enonce" placeholder="Énoncé de la question" required rows="3"></textarea>
+            
+            <select name="type" id="type" onchange="updateChoixFields()" required>
+                <option value="">Type de question</option>
+                <option value="QCM_simple">QCM simple</option>
+                <option value="QCM_multiple">QCM multiple</option>
+                <option value="Vrai_Faux">Vrai/Faux</option>
+                <option value="numerique">Numérique</option>
+            </select>
+            
+            <div class="form-row">
+                <input type="number" name="bareme" step="0.5" value="1" placeholder="Barème" required min="0.5">
+                <input type="number" name="duree_question" value="60" placeholder="Durée (secondes)" required min="10">
+            </div>
+            
+            <div id="choix_section" style="display: none;">
+                <p><strong>Choix de réponses:</strong></p>
+                <div class="choix-container">
+                    {% for i in range(4) %}
+                    <div class="choix-item">
+                        <input type="checkbox" name="correct[]" value="{{ i }}">
+                        <input type="text" name="choix[]" placeholder="Choix {{ i + 1 }}">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <button type="submit">Ajouter la question</button>
+        </form>
+    </section>
+
+    <!-- Actions du quiz -->
+    <section class="quiz-actions">
+        <form method="post" style="display: inline;">
+            <input type="hidden" name="action" value="publish">
+            <button type="submit" class="btn-publish">Publier le quiz</button>
+        </form>
+        
+        <a href="{{ url_for('enseignant.dashboard') }}">
+            <button class="btn-back">Retour au tableau de bord</button>
+        </a>
+    </section>
+</div>
+
+<script>
+function updateChoixFields() {
+    const type = document.getElementById('type').value;
+    const choixSection = document.getElementById('choix_section');
+    
+    if (type === 'QCM_simple' || type === 'QCM_multiple' || type === 'Vrai_Faux') {
+        choixSection.style.display = 'block';
+    } else {
+        choixSection.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

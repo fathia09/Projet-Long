@@ -1,64 +1,42 @@
-from flask import Flask, render_template
-from flask_mysqldb import MySQL
+from flask import Flask, redirect, url_for
+from config import Config
+from models.database import init_db, close_db
+from routes.auth import auth_bp
+from routes.enseignant import enseignant_bp
+from routes.etudiant import etudiant_bp
 
 app = Flask(__name__)
+app.config.from_object(Config)
 
+# Initialisation de la base de données
+init_db()
+
+# Créer des données initiales (à supprimer en production)
+try:
+    from init_data import create_initial_data
+    create_initial_data()
+except Exception as e:
+    print(f"Note: Les données initiales n'ont pas pu être créées: {e}")
+
+# Enregistrement des blueprints
+app.register_blueprint(auth_bp)
+app.register_blueprint(enseignant_bp, url_prefix='/enseignant')
+app.register_blueprint(etudiant_bp, url_prefix='/etudiant')
+
+# Routes principales
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return redirect(url_for('auth.login'))
 
-@app.route('/inscription')
-def inscription():
-    return render_template('inscription.html')
+@app.route('/dashboard')
+def dashboard():
+    from flask import session
+    if session.get('role') == 'enseignant':
+        return redirect(url_for('enseignant.dashboard'))
+    return redirect(url_for('etudiant.dashboard'))
 
-@app.route('/connexion')
-def connexion():
-    return render_template('connexion.html')
-
-@app.route('/user')
-def user():
-    return render_template('user.html')
-
-@app.route('/etudiant')
-def etudiant():
-    return render_template('interface_etudiant.html')
-
-@app.route('/resultat_etudiant')
-def resultat_etudiant():
-    return render_template('resultats_etu.html')
-
-@app.route('/examen-etudiant')
-def examen_etudiant():
-    return render_template('examen_etudiant.html')
-
-@app.route('/enseignant')
-def enseignant():
-    return render_template('examen-enseignant.html')
-
-@app.route('/profile-etudiant')
-def profile_etudiant():
-    return render_template('profil_etu.html')
-
-@app.route('/classe')
-def classe():
-    return render_template('Classe.html')
-
-@app.route('/statistique')
-def statistique():
-    return render_template('Statistique.html')
-
-@app.route('/ajouter-examen')
-def ajouter_examen():
-    return render_template('creer_quiz.html')
-
-@app.route('/passer-examen')
-def passer_examen():
-    return render_template('passer_examen.html')
-
-@app.route('/admin-dashboard')
-def admin_dashboard():
-    return render_template('admin.html')
-
+# Gestion de la fermeture de la base de données
+app.teardown_appcontext(close_db)
 
 if __name__ == '__main__':
     app.run(debug=True)

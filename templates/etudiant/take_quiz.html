@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Passer le quiz{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ quiz.titre }}</h2>
+    <p>Durée totale: {{ quiz.duree }} minutes</p>
+    
+    <form id="quiz-form" method="post" action="{{ url_for('etudiant.submit_quiz', quiz_id=quiz_id) }}">
+        <div id="quiz-content">
+            {% for item in questions %}
+            <div id="question-{{ item.question.id }}" class="question-container" style="display: none;">
+                <div class="question-header">
+                    <h3>Question {{ loop.index }} 
+                        <span class="timer" id="timer-{{ item.question.id }}"></span>
+                    </h3>
+                    <p><strong>({{ item.question.bareme }} pts - Temps: {{ item.question.duree }}s)</strong></p>
+                </div>
+                
+                <div class="question-body">
+                    <p>{{ item.question.enonce }}</p>
+                    
+                    {% if item.question.type == 'numerique' %}
+                    <input type="number" name="question_{{ item.question.id }}" 
+                           step="any" placeholder="Votre réponse numérique">
+                    
+                    {% elif item.question.type == 'QCM_simple' or item.question.type == 'Vrai_Faux' %}
+                    <div class="choices">
+                        {% for c in item.choix %}
+                        <label class="choice">
+                            <input type="radio" name="question_{{ item.question.id }}" 
+                                   value="{{ c.id }}">
+                            {{ c.texte }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                    
+                    {% elif item.question.type == 'QCM_multiple' %}
+                    <div class="choices">
+                        {% for c in item.choix %}
+                        <label class="choice">
+                            <input type="checkbox" name="question_{{ item.question.id }}" 
+                                   value="{{ c.id }}">
+                            {{ c.texte }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="navigation">
+            <button type="button" id="prev-btn">Précédent</button>
+            <button type="button" id="next-btn">Suivant</button>
+            <button type="submit" id="submit-btn" style="display: none;">Soumettre le quiz</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    window.questionsData = {{ questions | tojson }};
+    window.quizId = {{ quiz_id }};
+</script>
+<script src="{{ url_for('static', filename='js/timer.js') }}"></script>
+{% endblock %}

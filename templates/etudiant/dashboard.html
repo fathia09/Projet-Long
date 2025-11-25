@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Tableau de bord Étudiant{% endblock %}
+
+{% block content %}
+<h1>Tableau de bord Étudiant</h1>
+
+<!-- Quiz disponibles -->
+<section class="dashboard-section">
+    <h2>Quiz disponibles</h2>
+    
+    {% if quiz %}
+    <table>
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Matière</th>
+                <th>Durée</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for q in quiz %}
+            <tr>
+                <td>{{ q.titre }}</td>
+                <td>{{ q.matiere_nom }}</td>
+                <td>{{ q.duree }} minutes</td>
+                <td>
+                    <a href="{{ url_for('etudiant.take_quiz', quiz_id=q.id) }}">
+                        <button>Commencer le quiz</button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Aucun quiz disponible pour le moment.</p>
+    {% endif %}
+</section>
+
+<!-- Résultats -->
+<section class="dashboard-section">
+    <h2>Mes résultats</h2>
+    
+    {% if resultats %}
+    <table>
+        <thead>
+            <tr>
+                <th>Quiz</th>
+                <th>Date</th>
+                <th>Score</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in resultats %}
+            <tr>
+                <td>{{ r.titre }}</td>
+                <td>{{ r.date_soumission }}</td>
+                <td>{{ r.score }} points</td>
+                <td>
+                    <a href="{{ url_for('etudiant.view_results', quiz_id=r.id_quiz) }}">Voir détails</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Aucun résultat pour le moment.</p>
+    {% endif %}
+</section>
+{% endblock %}
