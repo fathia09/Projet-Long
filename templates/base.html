@@ -3,124 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="ExamOnline - Plateforme d'examens en ligne sécurisés.">
-    <meta name="author" content="ExamOnline Team">
-    <title>{% block title %}EvalyQuiz{% endblock %}</title>
-    
-    <!-- Polices et icônes -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Styles CSS -->
-   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-
+    <title>{% block title %}Quiz App{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 <body>
-    <header>
-        <div class="container header-container">
-            <div class="logo-container">
-                <img src="/static/images/logo.png" alt="ExamOnline Logo">
-                <h1>EvalyQuiz</h1>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1><a href="{{ url_for('dashboard') }}">Quiz App</a></h1>
+            <div class="nav-links">
+                {% if session.user_id %}
+                    <span>Bonjour {{ session.prenom }} {{ session.nom }}</span>
+                    {% if session.groupe %}
+                        <span>(Groupe: {{ session.groupe }})</span>
+                    {% endif %}
+                    <a href="{{ url_for('auth.logout') }}">Déconnexion</a>
+                {% endif %}
             </div>
-            <nav>
-                <a href="/exams" class="nav-link"><i class="fas fa-file-alt"></i> Examens</a>
-                <a href="/guide" class="nav-link"><i class="fas fa-book"></i> Guide d'utilisation</a>
-                <div class="search-container">
-                    <input type="text" placeholder="Rechercher un examen..." aria-label="Rechercher">
-                    <button><i class="fas fa-search"></i></button>
-                </div>
-                <div class="connexion-container">
-                    <a href="/connexion"><i class="fas fa-sign-in-alt"></i> Connexion</a>
-                </div>
-            </nav>
         </div>
-    </header>
+    </nav>
 
-    <main>
-        <!-- Section Héro -->
-        <section class="hero">
-                    <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active" data-bs-interval="10000">
-            <img src="..." class="d-block w-100" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Création d'examens</h5>
-                <p>Créez facilement des examens en ligne avec des questions variées, des délais et des paramètres de sécurité personnalisables.</p>
-            </div>
-            </div>
-            <div class="carousel-item" data-bs-interval="2000">
-            <img src="..." class="d-block w-100" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Examen en temps réel</h5>
-                <p>Les étudiants passent leurs examens en ligne en toute sécurité, avec chronométrage automatique et contrôle des réponses en temps réel.</p>
-            </div>
-            </div>
-            <div class="carousel-item">
-            <img src="..." class="d-block w-100" alt="...">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Analyse et rapports</h5>
-                <p>Obtenez des rapports détaillés sur les performances des candidats, les taux de réussite et identifiez les domaines à améliorer</p>
-            </div>
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-        </div>
-        </section>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-        <!-- Espace pour le contenu dynamique -->
-        <div class="container my-5">
-            {% block content %}
-            {% endblock %}
-        </div>
-    </main>
-
-    <footer>
-        <div class="container footer-container">
-            <div class="footer-column">
-                <h3>EvalyQuiz</h3>
-                <p>Plateforme sécurisée pour passer et gérer vos examens en ligne efficacement.</p>
-                <p><i class="fas fa-envelope"></i></p>
-            </div>
-            
-            <div class="footer-column">
-                <h3>Liens utiles</h3>
-                <ul>
-                    <li><a href="/exams"><i class="fas fa-file-alt"></i> Examens</a></li>
-                    <li><a href="/contact"><i class="fas fa-envelope"></i> Contact</a></li>
-                    <li><a href="/about"><i class="fas fa-info-circle"></i> À propos</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-column">
-                <h3>Suivez-nous</h3>
-                <p>Restez informé des dernières actualités et mises à jour de ExamOnline.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="copyright">
-            <p>&copy; 2025 EvalyQuiz. Tous droits réservés.</p>
-        </div>
-    </footer>
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>

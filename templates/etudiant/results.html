@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Résultats du quiz{% endblock %}
+
+{% block content %}
+<div class="results-container">
+    <h2>Résultats du quiz</h2>
+    
+    <div class="results-header">
+        <h3>{{ resultat.titre }}</h3>
+        <p>Étudiant: {{ resultat.prenom }} {{ resultat.nom }}</p>
+        <p>Date: {{ resultat.date_soumission }}</p>
+    </div>
+    
+    <div class="score-display">
+        <div class="score">{{ resultat.score }} points</div>
+        <p>sur {{ points_max }} points maximum</p>
+    </div>
+    
+    <div class="results-details">
+        <p>Nombre de questions: {{ total_questions }}</p>
+        <p>Score: {{ resultat.score }}/{{ points_max }}</p>
+        <p>Pourcentage: {{ "%.1f"|format((resultat.score / points_max * 100) if points_max > 0 else 0) }}%</p>
+    </div>
+    
+    <div class="results-actions">
+        <a href="{{ url_for('etudiant.dashboard') }}">
+            <button>Retour au tableau de bord</button>
+        </a>
+    </div>
+</div>
+{% endblock %}
