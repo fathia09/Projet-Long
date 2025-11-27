@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, render_template, url_for
 from config import Config
 from models.database import init_db, close_db
 from routes.auth import auth_bp
@@ -24,9 +24,20 @@ app.register_blueprint(enseignant_bp, url_prefix='/enseignant')
 app.register_blueprint(etudiant_bp, url_prefix='/etudiant')
 
 # Routes principales
+# @app.route('/')
+# def index():
+#     return redirect(url_for('auth.login'))
+
+
 @app.route('/')
 def index():
-    return redirect(url_for('auth.login'))
+    """Page d'accueil"""
+    return render_template('index.html')
+
+@app.route('/home')
+def home():
+    """Alias pour la page d'accueil"""
+    return redirect(url_for('index'))
 
 @app.route('/dashboard')
 def dashboard():
