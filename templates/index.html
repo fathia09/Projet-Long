@@ -1,44 +1,105 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+{% block title %}Accueil - Quiz App{% endblock %}
+
 {% block content %}
-
-<!-- Section Fonctionnalités -->
-<section class="features">
-    <div class="container">
-        <div class="section-title">
-            <h2>Nos fonctionnalités</h2>
-            <p>Découvrez comment ExamOnline simplifie la gestion et le passage de vos examens en ligne</p>
+<div class="home-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Bienvenue sur Quiz App</h1>
+            <p class="hero-subtitle">La plateforme interactive pour créer et passer des quiz éducatifs</p>
+            <div class="hero-buttons">
+                {% if not session.user_id %}
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Commencer maintenant</a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-secondary">Se connecter</a>
+                {% else %}
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Accéder au tableau de bord</a>
+                {% endif %}
+            </div>
         </div>
-        <div class="feature-content" style="display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between;">
-            
-            <div class="feature-card" style="flex:1 1 300px; padding:20px; background-color:var(--light); border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.08);">
-                <div class="feature-icon" style="font-size:2rem; color:var(--secondary); margin-bottom:15px;">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-                <h3>Création d'examens</h3>
-                <p>Créez facilement des examens en ligne avec des questions variées, des délais et des paramètres de sécurité personnalisables.</p>
-                <a href="#" class="btn-link" style="color:var(--primary); font-weight:600; margin-top:10px; display:inline-block;">En savoir plus <i class="fas fa-arrow-right"></i></a>
+        <div class="hero-image">
+            <div class="placeholder-image">
+                <i class="icon-quiz">📚</i>
             </div>
-            
-            <div class="feature-card" style="flex:1 1 300px; padding:20px; background-color:var(--light); border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.08);">
-                <div class="feature-icon" style="font-size:2rem; color:var(--secondary); margin-bottom:15px;">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <h3>Examen en temps réel</h3>
-                <p>Les étudiants passent leurs examens en ligne en toute sécurité, avec chronométrage automatique et contrôle des réponses en temps réel.</p>
-                <a href="#" class="btn-link" style="color:var(--primary); font-weight:600; margin-top:10px; display:inline-block;">En savoir plus <i class="fas fa-arrow-right"></i></a>
-            </div>
-            
-            <div class="feature-card" style="flex:1 1 300px; padding:20px; background-color:var(--light); border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.08);">
-                <div class="feature-icon" style="font-size:2rem; color:var(--secondary); margin-bottom:15px;">
-                    <i class="fas fa-chart-bar"></i>
-                </div>
-                <h3>Analyse et rapports</h3>
-                <p>Obtenez des rapports détaillés sur les performances des candidats, les taux de réussite et identifiez les domaines à améliorer.</p>
-                <a href="#" class="btn-link" style="color:var(--primary); font-weight:600; margin-top:10px; display:inline-block;">En savoir plus <i class="fas fa-arrow-right"></i></a>
-            </div>
-
         </div>
-    </div>
-</section>
+    </section>
 
+    <!-- Features Section -->
+    <section class="features-section">
+        <h2>Fonctionnalités principales</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">👨‍🏫</div>
+                <h3>Pour les enseignants</h3>
+                <ul>
+                    <li>Création de quiz personnalisés</li>
+                    <li>Gestion des groupes d'étudiants</li>
+                    <li>Statistiques détaillées</li>
+                    <li>Export des résultats</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎓</div>
+                <h3>Pour les étudiants</h3>
+                <ul>
+                    <li>Interface intuitive</li>
+                    <li>Minuteur par question</li>
+                    <li>Résultats immédiats</li>
+                    <li>Historique des scores</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Technologie</h3>
+                <ul>
+                    <li>Interface responsive</li>
+                    <li>Temps réel</li>
+                    <li>Sécurisé</li>
+                    <li>Multi-plateforme</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="how-it-works">
+        <h2>Comment ça marche ?</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Inscription</h3>
+                <p>Créez votre compte en tant qu'enseignant ou étudiant</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Configuration</h3>
+                <p>Les enseignants créent des quiz et gèrent les groupes</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Participation</h3>
+                <p>Les étudiants passent les quiz avec suivi en temps réel</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Analyse</h3>
+                <p>Consultez les résultats et statistiques détaillées</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Prêt à commencer ?</h2>
+        <p>Rejoignez notre communauté d'apprentissage interactif</p>
+        {% if not session.user_id %}
+            <a href="{{ url_for('auth.register') }}" class="btn btn-large">Créer un compte gratuit</a>
+        {% else %}
+            <a href="{{ url_for('dashboard') }}" class="btn btn-large">Accéder à mon espace</a>
+        {% endif %}
+    </section>
+</div>
 {% endblock %}

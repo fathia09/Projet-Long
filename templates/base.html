@@ -9,8 +9,12 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <h1><a href="{{ url_for('dashboard') }}">Quiz App</a></h1>
+            <h1><a href="{{ url_for('dashboard') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" width="50" height="50" alt="Logo"></a></h1>
             <div class="nav-links">
+                <a href="{{ url_for('index') }}">Accueil</a>
+                <a href="#">Démonstration</a>
+                <a href="#">Contact</a>
+
                 {% if session.user_id %}
                     <span>Bonjour {{ session.prenom }} {{ session.nom }}</span>
                     {% if session.groupe %}
@@ -18,6 +22,7 @@
                     {% endif %}
                     <a href="{{ url_for('auth.logout') }}">Déconnexion</a>
                 {% endif %}
+                
             </div>
         </div>
     </nav>
