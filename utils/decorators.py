@@ -26,3 +26,13 @@ def etudiant_required(f):
             return redirect(url_for('main.dashboard'))
         return f(*args, **kwargs)
     return decorated
+
+
+def admin_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if session.get('role') != 'admin':
+            flash('Accès refusé')
+            return redirect(url_for('main.dashboard'))
+        return f(*args, **kwargs)
+    return decorated

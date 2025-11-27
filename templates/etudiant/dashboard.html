@@ -3,85 +3,8 @@
 {% block title %}Tableau de bord Étudiant{% endblock %}
 
 {% block content %}
-<style>
-    .cards-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 24px;
-        margin-top: 20px;
-    }
 
-    .quiz-card {
-        background: linear-gradient(135deg, #B67332 0%, #DAAB3A 100%);
-        border-radius: 12px;
-        padding: 24px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-    .quiz-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-    }
-
-    .quiz-card-header {
-        margin-bottom: 16px;
-    }
-
-    .quiz-card-title {
-        font-size: 20px;
-        font-weight: bold;
-        margin: 0 0 8px 0;
-    }
-
-    .quiz-card-subject {
-        font-size: 14px;
-        opacity: 0.9;
-        margin: 0;
-    }
-
-    .quiz-card-footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-top: 20px;
-        padding-top: 16px;
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .quiz-card-duration {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-    }
-
-    .quiz-card-button {
-        background-color: white;
-        color: #667eea;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 14px;
-    }
-
-    .quiz-card-button:hover {
-        background-color: #f0f0f0;
-        transform: scale(1.05);
-    }
-
-    .quiz-card-button a {
-        text-decoration: none;
-        color: inherit;
-    }
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/etudiant/styleEtudiant.css') }}">
 
 <h1>Tableau de bord Étudiant</h1>
 

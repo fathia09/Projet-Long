@@ -1,0 +1,127 @@
+/* Reset et base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+h1 {
+  color: #93441A;
+  text-align: center;
+  margin: 40px 0 30px;
+  font-size: 32px;
+}
+
+.dashboard-sections {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 30px;
+}
+
+.dashboard-section {
+  background-color: #EEE6D8;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-section h2 {
+  color: #93441A;
+  margin-bottom: 20px;
+  font-size: 22px;
+  border-bottom: 3px solid #DAAB3A;
+  padding-bottom: 10px;
+}
+
+.dashboard-section form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.dashboard-section input {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid #B67332;
+  border-radius: 4px;
+  background-color: #e5e7e6;
+  color: #93441A;
+  font-size: 14px;
+}
+
+.dashboard-section input::placeholder {
+  color: #B67332;
+}
+
+.dashboard-section input:focus {
+  outline: none;
+  border-color: #DAAB3A;
+  background-color: #fff;
+}
+
+.dashboard-section button,
+.dashboard-section a button {
+  padding: 10px 20px;
+  background-color: #DAAB3A;
+  color: #93441A;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.dashboard-section button:hover,
+.dashboard-section a button:hover {
+  background-color: #B67332;
+  color: #EEE6D8;
+}
+
+.dashboard-section a {
+  color: #B67332;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.dashboard-section a:hover {
+  color: #DAAB3A;
+}
+
+.dashboard-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.dashboard-section table thead {
+  background-color: #B67332;
+  color: #EEE6D8;
+}
+
+.dashboard-section table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.dashboard-section table td {
+  padding: 12px;
+  border-bottom: 1px solid #DAAB3A;
+  color: #93441A;
+}
+
+.dashboard-section table tbody tr:hover {
+  background-color: #DAAB3A;
+  color: #93441A;
+}
+
+.dashboard-section table tbody tr:hover a {
+  color: #93441A;
+}

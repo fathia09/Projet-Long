@@ -1,0 +1,55 @@
+/* Reset et base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #e5e7e6;
+    color: #333;
+}
+/* Navigation */
+.navbar {
+    background: #93441A;
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: #DAAB3A;
+}
+
+.nav-links span {
+    margin-right: 15px;
+    color: #EEE6D8;
+}
+
+.nav-links a {
+    margin-left: 15px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    background: #B67332;
+}
+
+.nav-links a:hover {
+    background: #DAAB3A;
+}
