@@ -5,6 +5,7 @@ from routes.auth import auth_bp
 from routes.enseignant import enseignant_bp
 from routes.etudiant import etudiant_bp
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 

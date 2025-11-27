@@ -3,6 +3,7 @@
 {% block title %}Éditer le quiz{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/enseignant/styleEditQuiz.css') }}">
 <div class="quiz-edit-container">
     <h2>Éditer: {{ quiz.titre }}</h2>
     

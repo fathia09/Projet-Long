@@ -1,0 +1,117 @@
+/* Reset et base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.form-container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 40px;
+  background-color: #EEE6D8;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+  color: #93441A;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 28px;
+}
+
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-container input,
+.form-container textarea,
+.form-container select {
+  padding: 12px;
+  border: 2px solid #B67332;
+  border-radius: 4px;
+  background-color: #e5e7e6;
+  color: #93441A;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+}
+
+.form-container input::placeholder,
+.form-container textarea::placeholder {
+  color: #B67332;
+}
+
+.form-container input:focus,
+.form-container textarea:focus,
+.form-container select:focus {
+  outline: none;
+  border-color: #DAAB3A;
+  background-color: #fff;
+}
+
+.form-container textarea {
+  resize: vertical;
+}
+
+.form-container fieldset {
+  border: 2px solid #B67332;
+  border-radius: 4px;
+  padding: 15px;
+  background-color: #e5e7e6;
+}
+
+.form-container legend {
+  color: #93441A;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #93441A;
+  margin: 8px 0;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #DAAB3A;
+}
+
+.form-container button {
+  padding: 12px;
+  background-color: #DAAB3A;
+  color: #93441A;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.form-container button:hover {
+  background-color: #B67332;
+  color: #EEE6D8;
+}
+
+.form-container p a {
+  color: #B67332;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.form-container p a:hover {
+  color: #DAAB3A;
+  text-decoration: underline;
+}
