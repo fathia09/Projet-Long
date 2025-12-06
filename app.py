@@ -4,6 +4,7 @@ from models.database import init_db, close_db
 from routes.auth import auth_bp
 from routes.enseignant import enseignant_bp
 from routes.etudiant import etudiant_bp
+from routes.admin import admin_bp
 
 
 app = Flask(__name__)
@@ -21,6 +22,7 @@ except Exception as e:
 
 # Enregistrement des blueprints
 app.register_blueprint(auth_bp)
+app.register_blueprint(admin_bp, url_prefix='/admin')
 app.register_blueprint(enseignant_bp, url_prefix='/enseignant')
 app.register_blueprint(etudiant_bp, url_prefix='/etudiant')
 
@@ -45,6 +47,8 @@ def dashboard():
     from flask import session
     if session.get('role') == 'enseignant':
         return redirect(url_for('enseignant.dashboard'))
+    elif session.get('role') == 'admin':
+        return redirect(url_for('admin.dashboard'))
     return redirect(url_for('etudiant.dashboard'))
 
 # Gestion de la fermeture de la base de données
