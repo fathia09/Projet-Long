@@ -6,7 +6,27 @@ def create_initial_data():
     """Crée des données initiales pour tester l'application"""
     db = sqlite3.connect('quiz.db')
     c = db.cursor()
-    
+     
+        #Créer un admin
+    password_hashAdmin = generate_password_hash('admin123')
+    c.execute('''
+        INSERT OR IGNORE INTO user (nom, prenom, email, password_hash, id_role) 
+        VALUES ('Admin', 'Super', 'admin@test.com', ?, 
+        (SELECT id FROM role WHERE user_role = 'admin'))
+    ''', (password_hashAdmin,))
+
+    #récupérer l'ID de l'admin
+    c.execute("SELECT id FROM user WHERE email = 'admin@test.com'")
+    result = c.fetchone()
+    if result:
+        admin_id = result[0]
+    else:
+        print("Erreur: Impossible de créer l'admin")
+        db.close()
+        return
+
+
+
     # Créer un enseignant
     password_hash = generate_password_hash('enseignant123')
     c.execute('''

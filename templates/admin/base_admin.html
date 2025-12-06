@@ -5,74 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} Espace Admin {% endblock %}</title>
 
+    <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <!-- CSS ADMIN -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/styleAdmin.css') }}">
 </head>
 
 <body>
 
+    <!-- ===== HEADER / NAVBAR ===== -->
     <header>
         <div class="container">
 
-            <!-- Logo -->
+            <!-- Logo + Nom -->
             <div class="logo-title">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
                 <div>
                     <h1>EvalyQuiz</h1>
-                    <small style="color:var(--beige); font-weight:600;">Espace Administrateur</small>
+                    <small>Espace Administrateur</small>
                 </div>
             </div>
 
-            <!-- Menu admin -->
+            <!-- Navigation -->
             <nav class="admin-nav">
-                <a href="">
+                <a href="#">
                     <i class="fa-solid fa-gauge-high"></i> Tableau de bord
                 </a>
-                <a href="">
+                <a href="#">
                     <i class="fa-solid fa-users"></i> Utilisateurs
                 </a>
-                <a href="">
+                <a href="#">
                     <i class="fa-solid fa-file-circle-check"></i> Examens
                 </a>
-                <a href="">
+                <a href="#">
                     <i class="fa-solid fa-chart-simple"></i> Résultats
                 </a>
-                <a href="">
+                <a href="#">
                     <i class="fa-solid fa-gear"></i> Paramètres
                 </a>
             </nav>
 
-            <!-- Profil admin -->
+            <!-- Profil Admin -->
             <div class="profile">
-                <div style="text-align:right;">
-                    <p style="margin:0; font-weight:700;">Admin</p>
-                    <small style="opacity:0.9;">Superviseur</small>
+                <div class="role-badge role-admin">
+                    <p>Admin</p>
+                    <small>Superviseur</small>
                 </div>
                 <img src="{{ url_for('static', filename='images/admin_avatar.png') }}" alt="Avatar">
             </div>
+
         </div>
     </header>
 
-    <!-- CONTENU PRINCIPAL -->
+    <!-- ===== CONTENU PRINCIPAL ===== -->
     <main>
-        <div class="container" style="flex-direction:column; align-items:stretch;">
-            <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:18px;">
-                <h2 style="margin:0; color:var(--gris-dark);">Tableau de bord</h2>
-                <span class="admin-badge">Mode Admin</span>
-            </div>
+        <div class="container admin-main">
 
+            
             {% block content %}
             {% endblock %}
+
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer>
+    <!-- ===== FOOTER ===== -->
+    <footer class="admin-footer">
         <p>&copy; 2025 EvalyQuiz - Espace Admin. Tous droits réservés.</p>
     </footer>
+
 </body>
 </html>
