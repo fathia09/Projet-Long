@@ -1,0 +1,336 @@
+/* ===== PALETTE =====
+Gris clair   : #ECEEED
+Crème        : #F3ECDD
+Or           : #E1B33F
+Brun clair   : #B87433
+Marron foncé : #8E3F17
+===================== */
+
+/* ===== GLOBAL ===== */
+body {
+    background-color: #ECEEED;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    color: #8E3F17;
+}
+
+/* ============================= */
+/* ===== NAVBAR ADMIN ===== */
+/* ============================= */
+
+header {
+    background: linear-gradient(135deg, #8E3F17, #B87433);
+    padding: 18px 0;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ===== LOGO + TITRE ===== */
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-title img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.logo-title h1 {
+    font-size: 1.4rem;
+    color: #F3ECDD;
+    margin: 0;
+}
+
+.logo-title small {
+    font-size: 0.75rem;
+}
+
+/* ===== MENU NAV ===== */
+.admin-nav {
+    display: flex;
+    gap: 18px;
+    background-color: rgba(243, 236, 221, 0.12);
+    padding: 10px 18px;
+    border-radius: 14px;
+}
+
+.admin-nav a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #F3ECDD;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 8px 14px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.admin-nav a i {
+    color: #E1B33F;
+}
+
+/* ===== HOVER MENU ===== */
+.admin-nav a:hover {
+    background-color: #E1B33F;
+    color: #8E3F17;
+    transform: translateY(-2px);
+}
+
+.admin-nav a:hover i {
+    color: #8E3F17;
+}
+
+/* ===== PROFIL ADMIN ===== */
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #F3ECDD;
+}
+
+.profile img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid #E1B33F;
+    object-fit: cover;
+}
+
+/* ============================= */
+/* ===== RESPONSIVE ===== */
+/* ============================= */
+
+@media (max-width: 992px) {
+    header .container {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .admin-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+
+.container {
+    max-width: 1200px;
+}
+
+/* ===== TITRES ===== */
+h1 {
+    color: #8E3F17;
+    letter-spacing: 0.6px;
+}
+
+h5 {
+    color: #B87433;
+}
+
+/* ===== CARTES ===== */
+.card {
+    background-color: #F3ECDD;
+    border-radius: 18px;
+    border: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.card-title {
+    font-weight: 700;
+    color: #B87433 !important;
+}
+
+.card-text {
+    font-size: 0.95rem;
+    color: #8E3F17;
+}
+
+/* ===== HOVER ANIMATION ===== */
+.hover-shadow {
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.hover-shadow:hover {
+    box-shadow: 0 10px 25px rgba(142, 63, 23, 0.25);
+    transform: translateY(-6px);
+    background-color: #E1B33F;
+}
+
+.hover-shadow:hover .card-title,
+.hover-shadow:hover .card-text,
+.hover-shadow:hover i {
+    color: #8E3F17 !important;
+}
+
+/* ===== BOUTONS ===== */
+.btn-primary {
+    background-color: #B87433;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+    background-color: #8E3F17;
+    transform: scale(1.05);
+}
+
+/* ===== ICÔNES ===== */
+.card-title i {
+    color: #E1B33F;
+}
+
+/* ===== ESPACEMENTS ===== */
+.mt-5 {
+    margin-top: 4rem !important;
+}
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+.p-4 {
+    padding: 1.5rem !important;
+}
+.admin-main {
+    padding: 30px 0;
+}
+/* ===== FOOTER ===== */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #8E3F17, #B87433);
+    color: #F3ECDD;
+    text-align: center;
+    padding: 15px 20px;
+    box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.25);
+    font-size: 0.9rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+footer a {
+    color: #E1B33F;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+footer a:hover {
+    color: #F3ECDD;
+    text-decoration: underline;
+}
+
+/* ===== PAGE GESTION UTILISATEURS ===== */
+
+.gestion-users-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.gestion-users-container h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2c3e50;
+    font-size: 28px;
+}
+
+/* ===== TABLE ===== */
+
+.gestion-users-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+
+.gestion-users-table thead {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: #fff;
+}
+
+.gestion-users-table th,
+.gestion-users-table td {
+    padding: 12px 14px;
+    text-align: left;
+}
+
+.gestion-users-table th {
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.gestion-users-table tbody tr {
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s ease;
+}
+
+.gestion-users-table tbody tr:hover {
+    background: #f5f7fa;
+}
+
+.gestion-users-table td {
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+/* ===== BADGE ROLE ===== */
+
+.role-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.role-admin {
+    background: #e74c3c;
+    color: white;
+}
+
+.role-user {
+    background: #3498db;
+    color: white;
+}
+
+/* ===== DATE ===== */
+
+.date-creation {
+    font-style: italic;
+    color: #7f8c8d;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+    .gestion-users-container {
+        padding: 15px;
+    }
+
+    .gestion-users-table th,
+    .gestion-users-table td {
+        padding: 10px;
+        font-size: 12px;
+    }
+}

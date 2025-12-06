@@ -63,7 +63,6 @@ class QuizManager {
     }
 
     setupEventListeners() {
-        document.getElementById('prev-btn').addEventListener('click', () => this.previousQuestion());
         document.getElementById('next-btn').addEventListener('click', () => this.nextQuestion());
     }
 
@@ -87,7 +86,7 @@ class QuizManager {
         // Démarrer le timer pour cette question
         this.currentTimer = new QuestionTimer(
             currentQuestion.question.id,
-            currentQuestion.duree_restante,
+            currentQuestion.question.duree,
             (questionId) => this.onQuestionTimeout(questionId)
         );
         this.currentTimer.start();
@@ -107,18 +106,10 @@ class QuizManager {
         }
     }
 
-    previousQuestion() {
-        if (this.currentQuestionIndex > 0) {
-            this.showQuestion(this.currentQuestionIndex - 1);
-        }
-    }
-
     updateNavigation() {
-        const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
         const submitBtn = document.getElementById('submit-btn');
 
-        if (prevBtn) prevBtn.disabled = this.currentQuestionIndex === 0;
         if (nextBtn) nextBtn.style.display = this.currentQuestionIndex < this.questions.length - 1 ? 'inline-block' : 'none';
         if (submitBtn) submitBtn.style.display = this.currentQuestionIndex === this.questions.length - 1 ? 'inline-block' : 'none';
     }
