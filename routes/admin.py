@@ -1,11 +1,13 @@
-from flask import Blueprint, flash, render_template, redirect, request, url_for, session
-from utils.decorators import admin_required
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, send_file
 from models.database import get_db
-from datetime import datetime
+from utils.decorators import login_required, admin_required
 from werkzeug.security import generate_password_hash
-
+from datetime import datetime
+import csv
+import io
 
 admin_bp = Blueprint('admin', __name__)
+
 
 def row_to_dict(row):
     """Convertit un objet Row en dictionnaire"""
@@ -46,15 +48,15 @@ def gestion_users():
         user = dict(row)
 
         # ✅ Conversion de la date pour que strftime fonctionne dans le template
-    if user["date_creation"]:
-        try:
-        # Cas avec microsecondes
-            user["date_creation"] = datetime.strptime(user["date_creation"], "%Y-%m-%d %H:%M:%S.%f")
-        except ValueError:
-        # Cas sans microsecondes
-            user["date_creation"] = datetime.strptime(user["date_creation"], "%Y-%m-%d %H:%M:%S")
+        if user["date_creation"]:
+            try:
+                # Cas avec microsecondes
+                user["date_creation"] = datetime.strptime(user["date_creation"], "%Y-%m-%d %H:%M:%S.%f")
+            except ValueError:
+                # Cas sans microsecondes
+                user["date_creation"] = datetime.strptime(user["date_creation"], "%Y-%m-%d %H:%M:%S")
 
-    users_list.append(user)
+        users_list.append(user)
 
     return render_template('admin/gestion_users.html', users=users_list)
 
@@ -105,6 +107,304 @@ def add_user():
     flash("Utilisateur ajouté avec succès ✅", "success")
     return redirect(url_for('admin.gestion_users'))
 
+@admin_bp.route('/edit_user', methods=['POST'])
+@admin_required
+def edit_user():
+    db = get_db()
+
+    # Récupération de l'ID depuis le formulaire
+    user_id = request.form.get('user_id')
+
+    if not user_id:
+        flash("ID utilisateur manquant.", "danger")
+        return redirect(url_for('admin.gestion_users'))
+
+    nom = request.form.get('nom')
+    prenom = request.form.get('prenom')
+    email = request.form.get('email')
+    role_name = request.form.get('role')
+    password = request.form.get('password')
+
+    # Vérification des champs obligatoires (sauf mot de passe)
+    if not nom or not prenom or not email or not role_name:
+        flash("Tous les champs sont obligatoires.", "danger")
+        return redirect(url_for('admin.gestion_users'))
+
+    # Récupération de l'id du rôle
+    role_row = db.execute(
+        "SELECT id FROM role WHERE user_role = ?",
+        (role_name,)
+    ).fetchone()
+
+    if not role_row:
+        flash("Rôle invalide.", "danger")
+        return redirect(url_for('admin.gestion_users'))
+
+    role_id = role_row["id"]
+
+    # Mise à jour selon que le mot de passe est rempli ou non
+    if password:
+        hashed_password = generate_password_hash(password)
+        db.execute(
+            "UPDATE user SET nom = ?, prenom = ?, email = ?, password_hash = ?, id_role = ? WHERE id = ?",
+            (nom, prenom, email, hashed_password, role_id, user_id)
+        )
+    else:
+        db.execute(
+            "UPDATE user SET nom = ?, prenom = ?, email = ?, id_role = ? WHERE id = ?",
+            (nom, prenom, email, role_id, user_id)
+        )
+
+    db.commit()
+    flash("Utilisateur modifié avec succès ✅", "success")
+    return redirect(url_for('admin.gestion_users'))
+
+@admin_bp.route('/delete_user', methods=['POST'])
+@admin_required
+def delete_user():
+    """
+    Supprime un utilisateur à partir de son ID.
+    """
+    db = get_db()
+
+    # Récupération de l'ID utilisateur depuis le formulaire POST
+    user_id = request.form.get('user_id')
+
+    if not user_id:
+        flash("ID utilisateur manquant.", "danger")
+        return redirect(url_for('admin.gestion_users'))
+
+    # Vérification que l'utilisateur existe
+    user = db.execute(
+        "SELECT * FROM user WHERE id = ?",
+        (user_id,)
+    ).fetchone()
+
+    if not user:
+        flash("Utilisateur introuvable.", "danger")
+        return redirect(url_for('admin.gestion_users'))
+
+    # Suppression de l'utilisateur
+    db.execute("DELETE FROM user WHERE id = ?", (user_id,))
+    db.commit()
+
+    flash("Utilisateur supprimé avec succès ✅", "success")
+    return redirect(url_for('admin.gestion_users'))
+
+
+
+@admin_bp.route('/gestion_examens')
+@login_required
+@admin_required
+def gestion_examens():
+    db = get_db()
+    c = db.cursor()
+
+    c.execute("SELECT * FROM matiere")
+    matieres = [row_to_dict(row) for row in c.fetchall()]
+
+    c.execute("SELECT * FROM groupe")
+    groupes = [row_to_dict(row) for row in c.fetchall()]
+
+    c.execute("SELECT * FROM quiz")
+    exams = [row_to_dict(row) for row in c.fetchall()]
+
+    db.close()
+
+    return render_template(
+        "admin/gestion_exam.html",
+        matieres=matieres,
+        groupes=groupes,
+        exams=exams
+    )
+
+
+@admin_bp.route('/matiere/add', methods=['POST'])
+@login_required
+@admin_required
+def add_matiere():
+    nom = request.form['nom']
+    db = get_db()
+    c = db.cursor()
+    c.execute("INSERT INTO matiere (nom) VALUES (?)", (nom,))
+    db.commit()
+    db.close()
+    flash("Matière ajoutée")
+    return redirect(url_for('admin.gestion_examens'))
+
+@admin_bp.route('/matiere/edit/<int:matiere_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_matiere(matiere_id):
+    db = get_db()
+    c = db.cursor()
+
+    if request.method == 'POST':
+        nom = request.form['nom']
+        c.execute("UPDATE matiere SET nom=? WHERE id=?", (nom, matiere_id))
+        db.commit()
+        db.close()
+        flash("Matière modifiée")
+        return redirect(url_for('admin.gestion_examens'))
+
+    c.execute("SELECT * FROM matiere WHERE id=?", (matiere_id,))
+    matiere = row_to_dict(c.fetchone())
+    db.close()
+
+    return render_template("admin/edit_matiere.html", matiere=matiere)
+
+@admin_bp.route('/matiere/delete/<int:matiere_id>', methods=['POST'])
+@login_required
+@admin_required
+def delete_matiere(matiere_id):
+    db = get_db()
+    c = db.cursor()
+    c.execute("DELETE FROM matiere WHERE id=?", (matiere_id,))
+    db.commit()
+    db.close()
+    flash("Matière supprimée")
+    return redirect(url_for('admin.gestion_examens'))
+
+
+@admin_bp.route('/groupe/add', methods=['POST'])
+@login_required
+@admin_required
+def add_groupe():
+    nom = request.form['nom']
+    db = get_db()
+    c = db.cursor()
+    c.execute("INSERT INTO groupe (nom) VALUES (?)", (nom,))
+    db.commit()
+    db.close()
+    flash("Groupe ajouté")
+    return redirect(url_for('admin.gestion_examens'))
+
+@admin_bp.route('/groupe/edit/<int:groupe_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_groupe(groupe_id):
+    db = get_db()
+    c = db.cursor()
+
+    if request.method == 'POST':
+        nom = request.form['nom']
+        c.execute("UPDATE groupe SET nom=? WHERE id=?", (nom, groupe_id))
+        db.commit()
+        db.close()
+        flash("Groupe modifié")
+        return redirect(url_for('admin.gestion_examens'))
+
+    c.execute("SELECT * FROM groupe WHERE id=?", (groupe_id,))
+    groupe = row_to_dict(c.fetchone())
+    db.close()
+
+    return render_template("admin/edit_groupe.html", groupe=groupe)
+
+
+@admin_bp.route('/groupe/delete/<int:groupe_id>', methods=['POST'])
+@login_required
+@admin_required
+def delete_groupe(groupe_id):
+    db = get_db()
+    c = db.cursor()
+    c.execute("DELETE FROM groupe WHERE id=?", (groupe_id,))
+    db.commit()
+    db.close()
+    flash("Groupe supprimé")
+    return redirect(url_for('admin.gestion_examens'))
+
+@admin_bp.route('/exam/create', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def create_exam():
+    db = get_db()
+    c = db.cursor()
+
+    if request.method == 'POST':
+        titre = request.form['titre']
+        description = request.form.get('description')
+        duree = request.form['duree']
+        date_debut = request.form['date_debut']
+        date_fin = request.form['date_fin']
+        id_matiere = request.form['matiere']
+        groupes = request.form.getlist('groupes')  # ✅ plusieurs groupes possibles
+
+        # ✅ Insertion de l'examen
+        c.execute("""
+            INSERT INTO quiz (titre, description, duree, date_debut, date_fin, id_matiere, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (titre, description, duree, date_debut, date_fin, id_matiere, "brouillon"))
+
+        exam_id = c.lastrowid
+
+        # ✅ Liaison examen ↔ groupes
+        for gid in groupes:
+            c.execute("""
+                INSERT INTO quiz_groupe (id_quiz, id_groupe)
+                VALUES (?, ?)
+            """, (exam_id, gid))
+
+        db.commit()
+        db.close()
+
+        flash("Examen créé avec succès")
+        return redirect(url_for('admin.gestion_examens'))
+
+    # ✅ Chargement des matières
+    c.execute("SELECT * FROM matiere")
+    matieres = [row_to_dict(row) for row in c.fetchall()]
+
+    # ✅ Chargement des groupes
+    c.execute("SELECT * FROM groupe")
+    groupes = [row_to_dict(row) for row in c.fetchall()]
+
+    db.close()
+
+    return render_template(
+        "admin/create_examen.html",
+        matieres=matieres,
+        groupes=groupes
+    )
+
+
+
+@admin_bp.route('/exam/edit/<int:exam_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_exam(exam_id):
+    db = get_db()
+    c = db.cursor()
+
+    if request.method == 'POST':
+        titre = request.form['titre']
+        status = request.form['status']
+
+        c.execute("UPDATE quiz SET titre=?, status=? WHERE id=?", (titre, status, exam_id))
+        db.commit()
+        db.close()
+
+        flash("Examen modifié")
+        return redirect(url_for('admin.gestion_examens'))
+
+    c.execute("SELECT * FROM quiz WHERE id=?", (exam_id,))
+    exam = row_to_dict(c.fetchone())
+    db.close()
+
+    return render_template("admin/edit_exam.html", exam=exam)
+
+
+@admin_bp.route('/exam/delete/<int:exam_id>', methods=['POST'])
+@login_required
+@admin_required
+def delete_exam(exam_id):
+    db = get_db()
+    c = db.cursor()
+    c.execute("DELETE FROM quiz WHERE id=?", (exam_id,))
+    db.commit()
+    db.close()
+    flash("Examen supprimé")
+    return redirect(url_for('admin.gestion_examens'))
+
 
 
 @admin_bp.route('/settings')
@@ -113,8 +413,79 @@ def settings():
     """Paramètres généraux du site"""
     return render_template('admin/settings.html')
 
+
 @admin_bp.route('/reports')
-@admin_required 
+@admin_required
 def reports():
-    """Rapports et statistiques"""
-    return render_template('admin/reports.html')
+        """Rapports et statistiques globales (dashboard admin)"""
+        db = get_db()
+        c = db.cursor()
+
+        # --- Statistiques utilisateurs ---
+        c.execute("SELECT COUNT(*) as count FROM user")
+        total_users = c.fetchone()["count"]
+        
+        c.execute("""
+            SELECT COUNT(*) as count FROM user 
+            WHERE date_creation >= datetime('now', '-30 days')
+        """)
+        active_users = c.fetchone()["count"]
+        
+        c.execute("""
+            SELECT r.user_role, COUNT(*) as count 
+            FROM user u
+            JOIN role r ON u.id_role = r.id
+            GROUP BY r.user_role
+        """)
+        roles_data = c.fetchall()
+        roles_count = {row["user_role"]: row["count"] for row in roles_data}
+
+        # --- Statistiques examens ---
+        c.execute("SELECT COUNT(*) as count FROM quiz")
+        total_exams = c.fetchone()["count"]
+        
+        c.execute("SELECT * FROM quiz")
+        examens = c.fetchall()
+        exams_stats = []
+        
+        for ex in examens:
+            c.execute("SELECT * FROM resultat WHERE id_quiz = ?", (ex["id"],))
+            resultats = c.fetchall()
+            nb_etudiants = len(resultats)
+            moyenne = round(sum(r["score"] for r in resultats) / nb_etudiants, 2) if nb_etudiants > 0 else 0
+            exams_stats.append({
+                'id': ex["id"],
+                'titre': ex["titre"],
+                'nb_etudiants': nb_etudiants,
+                'moyenne': moyenne,
+                'resultats': resultats
+            })
+
+        # --- Examen spécifique à afficher (optionnel) ---
+        examen_id = request.args.get('examen_id', type=int)
+        examen = None
+        resultats_examen = []
+        moyenne_examen = 0
+        
+        if examen_id:
+            c.execute("SELECT * FROM quiz WHERE id = ?", (examen_id,))
+            examen = row_to_dict(c.fetchone())
+            if examen:
+                c.execute("SELECT * FROM resultat WHERE id_quiz = ?", (examen_id,))
+                resultats_examen = c.fetchall()
+                if resultats_examen:
+                    moyenne_examen = round(sum(r["score"] for r in resultats_examen) / len(resultats_examen), 2)
+
+        db.close()
+
+        return render_template(
+            'admin/reports.html',
+            total_users=total_users,
+            active_users=active_users,
+            roles_count=roles_count,
+            total_exams=total_exams,
+            exams_stats=exams_stats,
+            examen=examen,
+            resultats=resultats_examen,
+            moyenne=moyenne_examen
+        )
