@@ -192,7 +192,6 @@ def delete_user():
     return redirect(url_for('admin.gestion_users'))
 
 
-
 @admin_bp.route('/gestion_examens')
 @login_required
 @admin_required
@@ -200,14 +199,26 @@ def gestion_examens():
     db = get_db()
     c = db.cursor()
 
+    # ✅ Matières (sans toucher à ta logique)
     c.execute("SELECT * FROM matiere")
     matieres = [row_to_dict(row) for row in c.fetchall()]
 
+    # ✅ Groupes
     c.execute("SELECT * FROM groupe")
     groupes = [row_to_dict(row) for row in c.fetchall()]
 
+    # ✅ Examens
     c.execute("SELECT * FROM quiz")
     exams = [row_to_dict(row) for row in c.fetchall()]
+
+    # ✅ TOUS les enseignants présents dans le site
+    c.execute("""
+        SELECT user.id, user.nom, user.prenom, user.email
+        FROM user
+        JOIN role ON user.id_role = role.id
+        WHERE role.user_role = 'enseignant'
+    """)
+    enseignants = [row_to_dict(row) for row in c.fetchall()]
 
     db.close()
 
@@ -215,7 +226,8 @@ def gestion_examens():
         "admin/gestion_exam.html",
         matieres=matieres,
         groupes=groupes,
-        exams=exams
+        exams=exams,
+        enseignants=enseignants  # ✅ liste complète des enseignants
     )
 
 
@@ -224,13 +236,26 @@ def gestion_examens():
 @admin_required
 def add_matiere():
     nom = request.form['nom']
+    id_enseignant = request.form['id_user']  # vient du <select>
+
     db = get_db()
     c = db.cursor()
-    c.execute("INSERT INTO matiere (nom) VALUES (?)", (nom,))
+
+    # ✅ Colonnes EXACTES de ta table
+    c.execute(
+        "INSERT INTO matiere (id_enseignant, nom) VALUES (?, ?)",
+        (id_enseignant, nom)
+    )
+
+    # ✅ Récupération automatique de l'id de la matière
+    id_matiere = c.lastrowid
+
     db.commit()
     db.close()
-    flash("Matière ajoutée")
+
+    flash(f"Matière ajoutée avec succès (ID = {id_matiere})")
     return redirect(url_for('admin.gestion_examens'))
+
 
 @admin_bp.route('/matiere/edit/<int:matiere_id>', methods=['GET', 'POST'])
 @login_required
@@ -271,13 +296,26 @@ def delete_matiere(matiere_id):
 @admin_required
 def add_groupe():
     nom = request.form['nom']
+    id_enseignant = request.form['id_user']  # enseignant sélectionné dans le select
+
     db = get_db()
     c = db.cursor()
-    c.execute("INSERT INTO groupe (nom) VALUES (?)", (nom,))
+
+    # ✅ Colonnes EXACTES de la table groupe
+    c.execute(
+        "INSERT INTO groupe (nom, id_enseignant) VALUES (?, ?)",
+        (nom, id_enseignant)
+    )
+
+    # ✅ Récupération automatique de l'id du groupe
+    id_groupe = c.lastrowid
+
     db.commit()
     db.close()
-    flash("Groupe ajouté")
+
+    flash(f"Groupe ajouté avec succès (ID = {id_groupe})")
     return redirect(url_for('admin.gestion_examens'))
+
 
 @admin_bp.route('/groupe/edit/<int:groupe_id>', methods=['GET', 'POST'])
 @login_required
@@ -327,13 +365,24 @@ def create_exam():
         date_debut = request.form['date_debut']
         date_fin = request.form['date_fin']
         id_matiere = request.form['matiere']
-        groupes = request.form.getlist('groupes')  # ✅ plusieurs groupes possibles
+        groupes = request.form.getlist('groupes')   # ✅ plusieurs groupes possibles
 
-        # ✅ Insertion de l'examen
+        # ✅ ICI on récupère l’enseignant depuis le formulaire
+        id_enseignant = request.form['id_user']
+
+        # ✅ Insertion correcte selon la vraie table quiz
         c.execute("""
-            INSERT INTO quiz (titre, description, duree, date_debut, date_fin, id_matiere, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (titre, description, duree, date_debut, date_fin, id_matiere, "brouillon"))
+            INSERT INTO quiz (
+                titre, description, duree,
+                date_debut, date_fin,
+                status, id_enseignant, id_matiere
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            titre, description, duree,
+            date_debut, date_fin,
+            "brouillon", id_enseignant, id_matiere
+        ))
 
         exam_id = c.lastrowid
 
@@ -350,6 +399,10 @@ def create_exam():
         flash("Examen créé avec succès")
         return redirect(url_for('admin.gestion_examens'))
 
+    # =========================
+    # PARTIE GET
+    # =========================
+
     # ✅ Chargement des matières
     c.execute("SELECT * FROM matiere")
     matieres = [row_to_dict(row) for row in c.fetchall()]
@@ -358,14 +411,23 @@ def create_exam():
     c.execute("SELECT * FROM groupe")
     groupes = [row_to_dict(row) for row in c.fetchall()]
 
+    # ✅ Chargement de TOUS les enseignants (comme les autres routes)
+    c.execute("""
+        SELECT user.id, user.nom, user.prenom
+        FROM user
+        JOIN role ON user.id_role = role.id
+        WHERE role.user_role = 'enseignant'
+    """)
+    enseignants = [row_to_dict(row) for row in c.fetchall()]
+
     db.close()
 
     return render_template(
         "admin/create_examen.html",
         matieres=matieres,
-        groupes=groupes
+        groupes=groupes,
+        enseignants=enseignants   # ✅ pour le <select>
     )
-
 
 
 @admin_bp.route('/exam/edit/<int:exam_id>', methods=['GET', 'POST'])
@@ -376,21 +438,61 @@ def edit_exam(exam_id):
     c = db.cursor()
 
     if request.method == 'POST':
-        titre = request.form['titre']
-        status = request.form['status']
+        # Récupération sécurisée des champs
+        titre = request.form.get('titre')
+        description = request.form.get('description', '')
+        status = request.form.get('status', 'brouillon')
+        id_matiere = request.form.get('matiere')
+        id_enseignant = request.form.get('id_user')
 
-        c.execute("UPDATE quiz SET titre=?, status=? WHERE id=?", (titre, status, exam_id))
+        # Vérifications des champs obligatoires
+        if not titre or not id_matiere or not id_enseignant:
+            flash("Titre, matière et enseignant sont obligatoires")
+            return redirect(url_for('admin.edit_exam', exam_id=exam_id))
+
+        # Mise à jour de la base de données
+        c.execute("""
+            UPDATE quiz
+            SET titre=?, description=?, status=?, id_matiere=?, id_enseignant=?
+            WHERE id=?
+        """, (titre, description, status, id_matiere, id_enseignant, exam_id))
+
         db.commit()
         db.close()
 
-        flash("Examen modifié")
+        flash("Examen modifié avec succès")
         return redirect(url_for('admin.gestion_examens'))
 
+    # =========================
+    # PARTIE GET
+    # =========================
+
+    # Charger les informations de l'examen
     c.execute("SELECT * FROM quiz WHERE id=?", (exam_id,))
     exam = row_to_dict(c.fetchone())
+
+    # Charger toutes les matières pour le select
+    c.execute("SELECT * FROM matiere")
+    matieres = [row_to_dict(row) for row in c.fetchall()]
+
+    # Charger tous les enseignants pour le select
+    c.execute("""
+        SELECT user.id, user.nom, user.prenom
+        FROM user
+        JOIN role ON user.id_role = role.id
+        WHERE role.user_role = 'enseignant'
+    """)
+    enseignants = [row_to_dict(row) for row in c.fetchall()]
+
     db.close()
 
-    return render_template("admin/edit_exam.html", exam=exam)
+    return render_template(
+        "admin/edit_examen.html",
+        exam=exam,
+        matieres=matieres,
+        enseignants=enseignants
+    )
+
 
 
 @admin_bp.route('/exam/delete/<int:exam_id>', methods=['POST'])
