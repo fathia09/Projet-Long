@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from models.database import get_db
 from utils.decorators import login_required, enseignant_required
 from datetime import datetime
+from xhtml2pdf import pisa
 import csv
 import io
 import sqlite3
@@ -280,3 +281,101 @@ def export_quiz(quiz_id):
                     mimetype='text/csv', 
                     as_attachment=True, 
                     download_name=f'quiz_{quiz_id}_results.csv')
+
+
+
+
+
+
+
+@enseignant_bp.route('/export_pdf/<int:quiz_id>')
+@login_required
+@enseignant_required
+def export_quiz_pdf(quiz_id):
+    db=get_db()
+    c=db.cursor()
+    c.execute("SELECT * FROM quiz WHERE id=?",(quiz_id,))
+    quiz=row_to_dict(c.fetchone())
+
+    c.execute('''
+        SELECT r.*,u.nom,u.prenom
+        FROM resultat_quiz r
+        JOIN user u ON r.id_etudiant=u.id
+        WHERE r.id_quiz= ?
+        ORDER BY r.score DESC
+    ''',(quiz_id,))
+    resultats=[row_to_dict(row) for row in c.fetchall()]
+    db.close()
+
+    scores = [r['score'] for r in resultats if r['score'] is not None]
+    avg_score = sum(scores) / len(scores) if scores else 0
+    avg_score = round(avg_score, 2)
+
+    html_content=render_template('enseignant/pdf_template.html',quiz=quiz,resultats=resultats,avg_score=avg_score)
+
+    pdf_output=io.BytesIO()
+
+    pisa_status=pisa.CreatePDF(
+        src=html_content,
+        dest=pdf_output
+    )
+    if pisa_status.err:
+        return"Une erreur est survenue lors de la creation du PDF",500
+    pdf_output.seek(0)
+
+    return send_file(
+        pdf_output,
+        mimetype='appliction/pdf',
+        as_attachment=True,
+        download_name=f'Resultats_{quiz["titre"]}.pdf'
+    )
+
+@enseignant_bp.route('/export_quiz_content_pdf/<int:quiz_id>')
+@login_required
+@enseignant_required
+def export_quiz_content_pdf(quiz_id):
+    db=get_db()
+    c=db.cursor()
+
+    c.execute("SELECT * FROM quiz WHERE id = ?",(quiz_id,))
+    quiz=row_to_dict(c.fetchone())
+
+    if not quiz:
+        flash('Quiz introuvable')
+        return redirect(url_for('enseignant.dashboard'))
+    
+    c.execute("SELECT * FROM question WHERE id_quiz=?",(quiz_id,))
+    questions=[row_to_dict(row) for row in c.fetchall()]
+
+    total_duree_secondes=sum(q['duree'] for q in questions if q['duree'])
+    total_duree_minutes=int(total_duree_secondes/60)
+    quiz['duree']=total_duree_minutes
+
+    questions_avec_choix=[]
+    for q in questions:
+        c.execute("SELECT * FROM choix_reponse WHERE id_question=?",(q['id'],))
+        choix=[row_to_dict(row) for row in c.fetchall()]
+        questions_avec_choix.append({'question':q,'choix':choix})
+
+    db.close()
+
+    html_content=render_template(
+        'enseignant/quiz_print_template.html',
+        quiz=quiz,
+        questions=questions_avec_choix
+    )
+    pdf_output=io.BytesIO()
+    pisa_status=pisa.CreatePDF(
+        src=html_content,
+        dest=pdf_output
+    )
+    if pisa_status.err:
+        return"Une erreur est survenue lors de la creation du PDF",500
+    pdf_output.seek(0)
+
+    return send_file(
+        pdf_output,
+        mimetype='application.pdf',
+        as_attachment=True,
+        download_name=f'Sujet_{quiz["titre"]}.pdf'
+    )

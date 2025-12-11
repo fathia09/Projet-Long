@@ -256,27 +256,35 @@ def add_matiere():
     flash(f"Matière ajoutée avec succès (ID = {id_matiere})")
     return redirect(url_for('admin.gestion_examens'))
 
-
-@admin_bp.route('/matiere/edit/<int:matiere_id>', methods=['GET', 'POST'])
+@admin_bp.route('/matiere/edit/<int:matiere_id>', methods=['POST'])
 @login_required
 @admin_required
 def edit_matiere(matiere_id):
     db = get_db()
     c = db.cursor()
 
-    if request.method == 'POST':
-        nom = request.form['nom']
-        c.execute("UPDATE matiere SET nom=? WHERE id=?", (nom, matiere_id))
-        db.commit()
-        db.close()
-        flash("Matière modifiée")
+    # Récupération des champs envoyés par le formulaire inline
+    nom = request.form.get("nom")
+    id_enseignant = request.form.get("id_enseignant")
+
+    # Validation simple
+    if not nom or not id_enseignant:
+        flash("Erreur : tous les champs sont requis.", "error")
         return redirect(url_for('admin.gestion_examens'))
 
-    c.execute("SELECT * FROM matiere WHERE id=?", (matiere_id,))
-    matiere = row_to_dict(c.fetchone())
+    # Mise à jour de la matière dans la base de données
+    c.execute("""
+        UPDATE matiere
+        SET nom = ?, id_enseignant = ?
+        WHERE id = ?
+    """, (nom, id_enseignant, matiere_id))
+
+    db.commit()
     db.close()
 
-    return render_template("admin/edit_matiere.html", matiere=matiere)
+    flash("Matière modifiée avec succès.", "success")
+    return redirect(url_for('admin.gestion_examens'))
+
 
 @admin_bp.route('/matiere/delete/<int:matiere_id>', methods=['POST'])
 @login_required
@@ -316,27 +324,34 @@ def add_groupe():
     flash(f"Groupe ajouté avec succès (ID = {id_groupe})")
     return redirect(url_for('admin.gestion_examens'))
 
-
-@admin_bp.route('/groupe/edit/<int:groupe_id>', methods=['GET', 'POST'])
+@admin_bp.route('/groupe/edit/<int:groupe_id>', methods=['POST'])
 @login_required
 @admin_required
 def edit_groupe(groupe_id):
     db = get_db()
     c = db.cursor()
 
-    if request.method == 'POST':
-        nom = request.form['nom']
-        c.execute("UPDATE groupe SET nom=? WHERE id=?", (nom, groupe_id))
-        db.commit()
-        db.close()
-        flash("Groupe modifié")
+    # Récupération des champs envoyés par le formulaire inline
+    nom = request.form.get("nom")
+    id_enseignant = request.form.get("id_enseignant")
+
+    # Validation simple
+    if not nom or not id_enseignant:
+        flash("Erreur : tous les champs sont requis.", "error")
         return redirect(url_for('admin.gestion_examens'))
 
-    c.execute("SELECT * FROM groupe WHERE id=?", (groupe_id,))
-    groupe = row_to_dict(c.fetchone())
+    # Mise à jour du groupe dans la base de données
+    c.execute("""
+        UPDATE groupe
+        SET nom = ?, id_enseignant = ?
+        WHERE id = ?
+    """, (nom, id_enseignant, groupe_id))
+
+    db.commit()
     db.close()
 
-    return render_template("admin/edit_groupe.html", groupe=groupe)
+    flash("Groupe modifié avec succès.", "success")
+    return redirect(url_for('admin.gestion_examens'))
 
 
 @admin_bp.route('/groupe/delete/<int:groupe_id>', methods=['POST'])
@@ -345,11 +360,15 @@ def edit_groupe(groupe_id):
 def delete_groupe(groupe_id):
     db = get_db()
     c = db.cursor()
-    c.execute("DELETE FROM groupe WHERE id=?", (groupe_id,))
+
+    # Suppression du groupe
+    c.execute("DELETE FROM groupe WHERE id = ?", (groupe_id,))
     db.commit()
     db.close()
-    flash("Groupe supprimé")
+
+    flash("Groupe supprimé avec succès.", "success")
     return redirect(url_for('admin.gestion_examens'))
+
 
 @admin_bp.route('/exam/create', methods=['GET', 'POST'])
 @login_required
@@ -591,3 +610,50 @@ def reports():
             resultats=resultats_examen,
             moyenne=moyenne_examen
         )
+
+
+@admin_bp.route('/exam/results')
+@login_required
+@admin_required
+def exam_results():
+    """Affiche les résultats de tous les examens du site"""
+    db = get_db()
+    c = db.cursor()
+
+    # Récupérer tous les examens avec matière et enseignant
+    c.execute('''
+        SELECT q.*, m.nom AS matiere_nom, u.nom AS enseignant_nom, u.prenom AS enseignant_prenom
+        FROM quiz q
+        JOIN matiere m ON q.id_matiere = m.id
+        JOIN user u ON q.id_enseignant = u.id
+        ORDER BY q.date_debut DESC
+    ''')
+    examens_raw = c.fetchall()
+
+    examens = []
+    for exam in examens_raw:
+        exam_dict = row_to_dict(exam)
+
+        # Récupérer les résultats de l'examen
+        c.execute('''
+            SELECT r.*, u.nom, u.prenom 
+            FROM resultat r
+            JOIN user u ON r.id_etudiant = u.id
+            WHERE r.id_quiz = ?
+            ORDER BY r.score DESC
+        ''', (exam_dict['id'],))
+        resultats = [row_to_dict(row) for row in c.fetchall()]
+
+        # Ajouter les résultats à l'examen
+        exam_dict['resultats'] = resultats
+        exam_dict['matiere'] = {'nom': exam_dict.pop('matiere_nom')}
+        exam_dict['enseignant'] = {'nom': exam_dict.pop('enseignant_nom'), 'prenom': exam_dict.pop('enseignant_prenom')}
+
+        examens.append(exam_dict)
+
+    db.close()
+
+    return render_template(
+        'admin/exam_results.html',
+        examens=examens
+    )
