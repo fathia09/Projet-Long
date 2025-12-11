@@ -217,7 +217,7 @@ footer {
     padding: 15px 20px;
     box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.25);
     font-size: 0.9rem;
-    animation: bounce 2s infinite;
+    animation: bounce 4s infinite;
 }
 
 @keyframes bounce {
@@ -605,3 +605,34 @@ canvas {
         text-align: left;
     }
 }
+
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    animation: fadeIn 0.3s;
+}
+
+.close {
+    float: right;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+
