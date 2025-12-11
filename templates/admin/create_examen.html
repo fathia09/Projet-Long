@@ -38,6 +38,17 @@
             {% endfor %}
         </select>
 
+        <!-- Enseignant responsable -->
+        <label>Enseignant :</label>
+        <select name="id_user" required>
+            <option value="">Sélectionner un enseignant</option>
+            {% for prof in enseignants %}
+                <option value="{{ prof.id }}">
+                    {{ prof.nom }} {{ prof.prenom }}
+                </option>
+            {% endfor %}
+        </select>
+
         <!-- Groupes cibles -->
         <fieldset>
             <legend>Groupes cibles (optionnel)</legend>

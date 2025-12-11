@@ -9,14 +9,30 @@
 
 <div class="dashboard-sections">
 
-    <!-- ==================== SECTION MATIÈRES ==================== -->
-   <section class="dashboard-section">
+<!-- ==================== SECTION MATIÈRES ==================== -->
+<section class="dashboard-section">
     <h2>Matières</h2>
 
-    <!-- Formulaire d'ajout de matière avec enseignant responsable -->
+    <!-- ✅ Formulaire corrigé (sans changer la logique) -->
     <form method="post" action="{{ url_for('admin.add_matiere') }}">
         <input type="text" name="nom" placeholder="Nom de la matière" required>
-        <input type="text" name="enseignant_responsable" placeholder="Enseignant responsable" required>
+
+      <!-- ✅ Sélection d’un enseignant du site -->
+<select name="id_user" required>
+    <option value="">-- Sélectionner un enseignant --</option>
+
+    {% if enseignants %}
+        {% for prof in enseignants %}
+            <option value="{{ prof.id }}">
+                {{ prof.nom }} {{ prof.prenom }}
+            </option>
+        {% endfor %}
+    {% else %}
+        <option disabled>Aucun enseignant disponible</option>
+    {% endif %}
+</select>
+
+
         <button type="submit">Ajouter matière</button>
     </form>
 
@@ -24,7 +40,7 @@
         <thead>
             <tr>
                 <th>Nom</th>
-                <th>Enseignant Responsable</th>
+                <th></th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -33,7 +49,7 @@
                 {% for matiere in matieres %}
                     <tr>
                         <td>{{ matiere["nom"] }}</td>
-                        <td>{{ matiere["enseignant_responsable"] }}</td>
+                        <td>{{ matiere["enseignant"] }}</td>
                         <td>
                             <a href="{{ url_for('admin.edit_matiere', matiere_id=matiere['id']) }}">Éditer</a> |
 
@@ -58,95 +74,112 @@
 </section>
 
 
-    <!-- ==================== SECTION GROUPES ==================== -->
-    <section class="dashboard-section">
-        <h2>Groupes</h2>
+<!-- ==================== SECTION GROUPES ==================== -->
+<section class="dashboard-section">
+    <h2>Groupes</h2>
 
-        <form method="post" action="{{ url_for('admin.add_groupe') }}">
-            <input type="text" name="nom" placeholder="Nom du groupe" required>
-            <button type="submit">Ajouter groupe</button>
-        </form>
+    <form method="post" action="{{ url_for('admin.add_groupe') }}">
+        <input type="text" name="nom" placeholder="Nom du groupe" required>
+        
+              <!-- ✅ Sélection d’un enseignant du site -->
+    <select name="id_user" required>
+        <option value="">-- Sélectionner un enseignant --</option>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if groupes %}
-                    {% for groupe in groupes %}
-                        <tr>
-                            <td>{{ groupe["nom"] }}</td>
-                            <td>
-                                <a href="{{ url_for('admin.edit_groupe', groupe_id=groupe['id']) }}">Éditer</a> |
+        {% if enseignants %}
+            {% for prof in enseignants %}
+                <option value="{{ prof.id }}">
+                    {{ prof.nom }} {{ prof.prenom }}
+                </option>
+            {% endfor %}
+        {% else %}
+            <option disabled>Aucun enseignant disponible</option>
+        {% endif %}
+    </select>
+    <button type="submit">Ajouter groupe</button>
+    </form>
 
-                                <form method="post"
-                                      action="{{ url_for('admin.delete_groupe', groupe_id=groupe['id']) }}"
-                                      style="display:inline;">
-                                    <button type="submit"
-                                            onclick="return confirm('Confirmer la suppression ?')">
-                                        Supprimer
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            {% if groupes %}
+                {% for groupe in groupes %}
                     <tr>
-                        <td colspan="2">Aucun groupe enregistré</td>
+                        <td>{{ groupe["nom"] }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.edit_groupe', groupe_id=groupe['id']) }}">Éditer</a> |
+
+                            <form method="post"
+                                  action="{{ url_for('admin.delete_groupe', groupe_id=groupe['id']) }}"
+                                  style="display:inline;">
+                                <button type="submit"
+                                        onclick="return confirm('Confirmer la suppression ?')">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </td>
                     </tr>
-                {% endif %}
-            </tbody>
-        </table>
-    </section>
-
-    <!-- ==================== SECTION EXAMENS ==================== -->
-    <section class="dashboard-section">
-        <h2>Examens</h2>
-
-        <a href="{{ url_for('admin.create_exam') }}" class="btn">
-            Créer un nouvel examen
-        </a>
-
-        <table>
-            <thead>
+                {% endfor %}
+            {% else %}
                 <tr>
-                    <th>Titre</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <td colspan="2">Aucun groupe enregistré</td>
                 </tr>
-            </thead>
-            <tbody>
-                {% if exams %}
-                    {% for exam in exams %}
-                        <tr>
-                            <td>{{ exam["titre"] }}</td>
-                            <td>{{ exam["status"] }}</td>
-                            <td>
-                                <a href="{{ url_for('admin.edit_exam', exam_id=exam['id']) }}">Éditer</a> |
-                                <a href="{{ url_for('admin.view_results', exam_id=exam['id']) }}">Résultats</a> |
+            {% endif %}
+        </tbody>
+    </table>
+</section>
 
-                                <form method="post"
-                                      action="{{ url_for('admin.delete_exam', exam_id=exam['id']) }}"
-                                      style="display:inline;">
-                                    <button type="submit"
-                                            onclick="return confirm('Confirmer la suppression ?')">
-                                        Supprimer
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
+
+<!-- ==================== SECTION EXAMENS ==================== -->
+<section class="dashboard-section">
+    <h2>Examens</h2>
+
+    <a href="{{ url_for('admin.create_exam') }}" class="btn">
+        Créer un nouvel examen
+    </a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if exams %}
+                {% for exam in exams %}
                     <tr>
-                        <td colspan="3">Aucun examen enregistré</td>
+                        <td>{{ exam["titre"] }}</td>
+                        <td>{{ exam["status"] }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.edit_exam', exam_id=exam['id']) }}">Éditer</a> |
+                            <a href="">Résultats</a> |
+
+                            <form method="post"
+                                  action="{{ url_for('admin.delete_exam', exam_id=exam['id']) }}"
+                                  style="display:inline;">
+                                <button type="submit"
+                                        onclick="return confirm('Confirmer la suppression ?')">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </td>
                     </tr>
-                {% endif %}
-            </tbody>
-        </table>
-    </section>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">Aucun examen enregistré</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</section>
 
 </div>
 

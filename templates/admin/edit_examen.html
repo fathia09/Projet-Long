@@ -1,10 +1,65 @@
-{% extends "base.html" %}
-{% block title %}Éditer examen : {{ examen.titre }}{% endblock %}
+{% extends "admin/base_admin.html" %}
+{% block title %}Éditer examen : {{ exam.titre }}{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/enseignant/styleEditQuiz.css') }}">
 
 <div class="quiz-edit-container">
+
+    <!-- Formulaire de modification de l'examen -->
+    <section class="edit-exam">
+        <h2>Modifier l'examen</h2>
+        <form method="post">
+            <input type="hidden" name="action" value="edit_exam">
+
+            <!-- Titre -->
+            <input type="text" name="titre" placeholder="Titre de l'examen" value="{{ exam.titre }}" >
+
+            <!-- Description -->
+            <textarea name="description" placeholder="Description de l'examen" rows="4">{{ exam.description }}</textarea>
+
+            <!-- Durée -->
+            <input type="number" name="duree" placeholder="Durée totale (minutes)" value="{{ exam.duree }}" min="1" >
+
+            <!-- Date de début -->
+            <label>Date de début :</label>
+            <input type="datetime-local" name="date_debut" value="{{ exam.date_debut }}" >
+
+            <!-- Date de fin -->
+            <label>Date de fin :</label>
+            <input type="datetime-local" name="date_fin" value="{{ exam.date_fin }}">
+
+            <!-- Status -->
+            <label>Status :</label>
+            <select name="status" required>
+                <option value="brouillon" {% if exam.status == 'brouillon' %}selected{% endif %}>Brouillon</option>
+                <option value="publié" {% if exam.status == 'publié' %}selected{% endif %}>Publié</option>
+                <option value="terminé" {% if exam.status == 'terminé' %}selected{% endif %}>Terminé</option>
+            </select>
+
+            <!-- Matière -->
+            <label>Matière :</label>
+            <select name="matiere" required>
+                {% for matiere in matieres %}
+                    <option value="{{ matiere.id }}" {% if matiere.id == exam.id_matiere %}selected{% endif %}>
+                        {{ matiere.nom }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <!-- Enseignant responsable -->
+            <label>Enseignant :</label>
+            <select name="id_user" required>
+                {% for prof in enseignants %}
+                    <option value="{{ prof.id }}" {% if prof.id == exam.id_enseignant %}selected{% endif %}>
+                        {{ prof.nom }} {{ prof.prenom }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn-save">Enregistrer les modifications</button>
+        </form>
+    </section>
 
     <!-- Questions existantes -->
     <section class="existing-questions">
@@ -76,15 +131,15 @@
         </form>
     </section>
 
-    <!-- Boutons bas (même style que quiz) -->
+    <!-- Boutons bas -->
     <section class="quiz-actions">
         <form method="post" style="display:inline;">
             <input type="hidden" name="action" value="publish">
             <button type="submit" class="btn-publish">Publier l'examen</button>
         </form>
 
-        <a href="{{ url_for('enseignant.dashboard') }}">
-            <button type="button" class="btn-back">Retour au tableau de bord</button>
+        <a href="{{ url_for('admin.gestion_examens') }}">
+            <button type="button" class="btn-back">Retour à la gestion des examens</button>
         </a>
     </section>
 
