@@ -15,88 +15,6 @@ def row_to_dict(row):
         return None
     return {key: row[key] for key in row.keys()}
 
-@enseignant_bp.route('/question/<int:question_id>/edit', methods=['GET', 'POST'])
-@login_required
-@enseignant_required
-def edit_question(question_id):
-    db = get_db()
-    c = db.cursor()
-
-    c.execute("SELECT * FROM question WHERE id = ?", (question_id,))
-    question = row_to_dict(c.fetchone())
-
-    if not question:
-        flash("Question introuvable")
-        return redirect(url_for('enseignant.dashboard'))
-
-    c.execute("SELECT * FROM choix_reponse WHERE id_question = ?", (question_id,))
-    choix = [row_to_dict(row) for row in c.fetchall()]
-
-    if request.method == 'POST':
-        enonce = request.form['enonce']
-        bareme = request.form['bareme']
-        duree = request.form['duree']
-
-        if question['type'] == 'numerique':
-            reponse_correcte = request.form['reponse_correcte']
-            c.execute("""
-                UPDATE question
-                SET enonce = ?, bareme = ?, duree = ?, reponse_correcte = ?
-                WHERE id = ?
-            """, (enonce, bareme, duree, reponse_correcte, question_id))
-
-        else:
-            c.execute("""
-                UPDATE question
-                SET enonce = ?, bareme = ?, duree = ?
-                WHERE id = ?
-            """, (enonce, bareme, duree, question_id))
-
-            c.execute("DELETE FROM choix_reponse WHERE id_question = ?", (question_id,))
-            choix_list = request.form.getlist("choix[]")
-            corrects = request.form.getlist("correct[]")
-
-            for i, ch in enumerate(choix_list):
-                if ch.strip():
-                    est_correct = str(i) in corrects
-                    c.execute("""
-                        INSERT INTO choix_reponse (id_question, texte, est_correct)
-                        VALUES (?, ?, ?)
-                    """, (question_id, ch, est_correct))
-
-        db.commit()
-        flash("Question modifiée avec succès")
-        return redirect(url_for('enseignant.edit_quiz', quiz_id=question['id_quiz']))
-
-    db.close()
-    return render_template("enseignant/edit_question.html", question=question, choix=choix)
-
-@enseignant_bp.route('/question/<int:question_id>/delete')
-@login_required
-@enseignant_required
-def delete_question(question_id):
-    db = get_db()
-    c = db.cursor()
-
-    c.execute("SELECT id_quiz FROM question WHERE id = ?", (question_id,))
-    row = c.fetchone()
-
-    if not row:
-        flash("Question introuvable")
-        return redirect(url_for('enseignant.dashboard'))
-
-    quiz_id = row['id_quiz']
-
-    c.execute("DELETE FROM choix_reponse WHERE id_question = ?", (question_id,))
-
-    c.execute("DELETE FROM question WHERE id = ?", (question_id,))
-
-    db.commit()
-    db.close()
-
-    flash("Question supprimée avec succès")
-    return redirect(url_for('enseignant.edit_quiz', quiz_id=quiz_id))
-
 @enseignant_bp.route('/dashboard')
 @login_required
 @enseignant_required
@@ -186,45 +104,66 @@ def edit_quiz(quiz_id):
             type_q = request.form['type']
             bareme = request.form['bareme']
             duree = request.form.get('duree_question', 60)
-            
-            c.execute('INSERT INTO question (enonce, type, bareme, duree, id_quiz, id_enseignant) VALUES (?, ?, ?, ?, ?, ?)', 
+
+            if type_q=='Vrai_Faux':
+                bonne_reponse_vf=request.form.get('correct_vf')
+                if not bonne_reponse_vf:
+                    flash("Erreur:Vous devez indiquer si la reponse est vrai ou Faux.","error")
+                    return redirect(url_for('enseignant.edit_quiz',quiz_id=quiz_id))
+                c.execute('INSERT INTO question (enonce, type, bareme, duree, id_quiz, id_enseignant) VALUES (?, ?, ?, ?, ?, ?)', 
                      (enonce, type_q, bareme, duree, quiz_id, session['user_id']))
-            question_id = c.lastrowid
+                question_id = c.lastrowid
+                c.execute('INSERT INTO choix_reponse(id_question,texte,est_correct) VALUES (?,?,?)',
+                          (question_id,"Vrai",(bonne_reponse_vf=='vrai')))
+                c.execute('INSERT INTO choix_reponse(id_question,texte,est_correct) VALUES (?,?,?)',
+                          (question_id,"Faux",(bonne_reponse_vf=='faux')))
             
-            if type_q in ['QCM_simple', 'QCM_multiple', 'Vrai_Faux']:
+            elif type_q in ['QCM_simple', 'QCM_multiple']:
                 choix = request.form.getlist('choix[]')
                 corrects = request.form.getlist('correct[]')
+
+                if not corrects:
+                    flash("Erreur:Vous devez au moins selectionner au moins une bonne reponse.","error")
+                    return redirect(url_for('enseignant.edit_quiz',quiz_id=quiz_id))
+                choix_valides=[c for c in choix if c.strip()]
+                if len(choix_valides)<2:
+                    flash("Erreur:Un QCM doit avoir au moins 2 choix de réponses possibles.","error")
+                    return redirect(url_for('enseignant.edit_quiz',quiz_id=quiz_id))
+                c.execute('INSERT INTO question(enonce,type,bareme,duree,id_quiz,id_enseignant) VALUES(?,?,?,?,?,?)',
+                          (enonce,type_q,bareme,duree,quiz_id,session['user_id']))
+                question_id=c.lastrowid
                 for i, choix_texte in enumerate(choix):
                     if choix_texte.strip():
                         est_correct = str(i) in corrects
                         c.execute('INSERT INTO choix_reponse (id_question, texte, est_correct) VALUES (?, ?, ?)', 
                                  (question_id, choix_texte, est_correct))
-            # elif type_q == 'numerique':
-            #     reponse = request.form.get('reponse_correcte')
-            #     c.execute(
-            #             'UPDATE question SET reponse_correcte = ? WHERE id = ?',
-            #             (reponse, question_id)
-            #     )
+            else:
+                pass
             db.commit()
             flash('Question ajoutée')
         elif action == 'publish':
-            c.execute("UPDATE quiz SET status = 'publié' WHERE id = ?", (quiz_id,))
-            db.commit()
-            flash('Quiz publié')
+            c.execute("SELECT COUNT(*) as count FROM question WHERE id_quiz=?",(quiz_id,))
+            nb_questions=c.fetchone()['count']
+            if nb_questions==0:
+                flash("Impossible de publier un quiz valide.")
+            else:
+                c.execute("UPDATE quiz SET status = 'publié' WHERE id = ?", (quiz_id,))
+                db.commit()
+                flash('Quiz publié')
     
     c.execute("SELECT * FROM quiz WHERE id = ?", (quiz_id,))
     quiz = row_to_dict(c.fetchone())
     c.execute("SELECT * FROM question WHERE id_quiz = ?", (quiz_id,))
     questions = [row_to_dict(row) for row in c.fetchall()]
     
-    questions_with_choix = []
+    questions_avec_choix = []
     for q in questions:
         c.execute("SELECT * FROM choix_reponse WHERE id_question = ?", (q['id'],))
         choix = [row_to_dict(row) for row in c.fetchall()]
-        questions_with_choix.append({'question': q, 'choix': choix})
+        questions_avec_choix.append({'question': q, 'choix': choix})
     
     db.close()
-    return render_template('enseignant/edit_quiz.html', quiz=quiz, questions=questions_with_choix)
+    return render_template('enseignant/edit_quiz.html', quiz=quiz, questions=questions_avec_choix)
 
 @enseignant_bp.route('/statistiques/<int:quiz_id>')
 @login_required
@@ -281,12 +220,6 @@ def export_quiz(quiz_id):
                     mimetype='text/csv', 
                     as_attachment=True, 
                     download_name=f'quiz_{quiz_id}_results.csv')
-
-
-
-
-
-
 
 @enseignant_bp.route('/export_pdf/<int:quiz_id>')
 @login_required
