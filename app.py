@@ -14,11 +14,11 @@ app.config.from_object(Config)
 init_db()
 
 # Créer des données initiales (à supprimer en production)
-try:
-    from init_data import create_initial_data
-    create_initial_data()
-except Exception as e:
-    print(f"Note: Les données initiales n'ont pas pu être créées: {e}")
+# try:
+#     from init_data import create_initial_data
+#     create_initial_data()
+# except Exception as e:
+#     print(f"Note: Les données initiales n'ont pas pu être créées: {e}")
 
 # Enregistrement des blueprints
 app.register_blueprint(auth_bp)
