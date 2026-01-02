@@ -217,7 +217,11 @@ footer {
     padding: 15px 20px;
     box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.25);
     font-size: 0.9rem;
+<<<<<<< HEAD
+    animation: bounce 2s infinite;
+=======
     animation: bounce 4s infinite;
+>>>>>>> origin/main
 }
 
 @keyframes bounce {
@@ -334,6 +338,8 @@ footer a:hover {
         font-size: 12px;
     }
 }
+<<<<<<< HEAD
+=======
 
 /* Container principal */
 .stats-container {
@@ -636,3 +642,4 @@ canvas {
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 
+>>>>>>> origin/main
