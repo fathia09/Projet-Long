@@ -545,13 +545,73 @@ def reports():
         # --- Statistiques examens ---
         c.execute("SELECT COUNT(*) as count FROM quiz")
         total_exams = c.fetchone()["count"]
-        
+
         c.execute("SELECT * FROM quiz")
         examens = c.fetchall()
         exams_stats = []
         
+        c.execute("""
+            SELECT status, COUNT(*) as count
+            FROM quiz
+            GROUP BY status
+        """)
+        quiz_status_data = c.fetchall()
+        quiz_status_count = {row["status"]: row["count"] for row in quiz_status_data}
+
+        c.execute("""
+            SELECT q.titre AS titre, COUNT(DISTINCT rq.id_etudiant) AS participants
+            FROM quiz q
+            LEFT JOIN resultat_quiz rq ON rq.id_quiz = q.id
+            GROUP BY q.id
+            ORDER BY participants DESC, q.id DESC
+            LIMIT 10
+        """)
+        popular_rows = c.fetchall()
+        popular_quiz_labels = [row["titre"] for row in popular_rows]
+        popular_quiz_values = [row["participants"] for row in popular_rows]
+
+        c.execute("""
+            SELECT COUNT(*) AS count
+            FROM user u
+            JOIN role r ON u.id_role = r.id
+            WHERE r.user_role = 'etudiant'
+        """)
+        total_students = c.fetchone()["count"]
+
+        c.execute("""
+            SELECT COUNT(DISTINCT rq.id_etudiant) AS count
+            FROM resultat_quiz rq
+            JOIN user u ON u.id = rq.id_etudiant
+            JOIN role r ON u.id_role = r.id
+            WHERE r.user_role = 'etudiant'
+        """)
+        students_participated = c.fetchone()["count"]
+        participation_rate = round((students_participated / total_students * 100), 1) if total_students else 0
+
+        c.execute("""
+            SELECT g.nom AS groupe, COUNT(u.id) AS count
+            FROM groupe g
+            LEFT JOIN user u ON u.id_groupe = g.id
+            LEFT JOIN role r ON r.id = u.id_role AND r.user_role = 'etudiant'
+            GROUP BY g.id
+            ORDER BY g.nom
+        """)
+        group_rows = c.fetchall()
+        group_labels = [row["groupe"] for row in group_rows]
+        group_values = [row["count"] for row in group_rows]
+
+        c.execute("""
+            SELECT strftime('%Y-%m', date_creation) AS ym, COUNT(*) AS count
+            FROM user
+            GROUP BY ym
+            ORDER BY ym
+        """)
+        reg_month_rows = c.fetchall()
+        reg_month_labels = [row["ym"] for row in reg_month_rows]
+        reg_month_values = [row["count"] for row in reg_month_rows]
+
         for ex in examens:
-            c.execute("SELECT * FROM resultat WHERE id_quiz = ?", (ex["id"],))
+            c.execute("SELECT * FROM resultat_quiz WHERE id_quiz = ?", (ex["id"],))
             resultats = c.fetchall()
             nb_etudiants = len(resultats)
             moyenne = round(sum(r["score"] for r in resultats) / nb_etudiants, 2) if nb_etudiants > 0 else 0
@@ -573,7 +633,7 @@ def reports():
             c.execute("SELECT * FROM quiz WHERE id = ?", (examen_id,))
             examen = row_to_dict(c.fetchone())
             if examen:
-                c.execute("SELECT * FROM resultat WHERE id_quiz = ?", (examen_id,))
+                c.execute("SELECT * FROM resultat_quiz WHERE id_quiz = ?", (examen_id,))
                 resultats_examen = c.fetchall()
                 if resultats_examen:
                     moyenne_examen = round(sum(r["score"] for r in resultats_examen) / len(resultats_examen), 2)
@@ -589,5 +649,13 @@ def reports():
             exams_stats=exams_stats,
             examen=examen,
             resultats=resultats_examen,
-            moyenne=moyenne_examen
+            moyenne=moyenne_examen,
+            quiz_status_count=quiz_status_count,
+            popular_quiz_labels=popular_quiz_labels,
+            popular_quiz_values=popular_quiz_values,
+            participation_rate=participation_rate,
+            group_labels=group_labels,
+            group_values=group_values,
+            reg_month_labels=reg_month_labels,
+            reg_month_values=reg_month_values
         )

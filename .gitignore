@@ -4,3 +4,5 @@ _pycache_/
 .env
 instance/
 .vscode/
+.venv
+quiz.db
