@@ -3,11 +3,12 @@
 {% block title %}Accueil - Quiz App{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 <div class="home-container">
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-content">
-            <h1>Bienvenue sur Quiz App</h1>
+            <h1>Bienvenue sur EvalyQuiz</h1>
             <p class="hero-subtitle">La plateforme interactive pour créer et passer des quiz éducatifs</p>
             <div class="hero-buttons">
                 {% if not session.user_id %}
@@ -20,7 +21,7 @@
         </div>
         <div class="hero-image">
             <div class="placeholder-image">
-                <i class="icon-quiz">📚</i>
+                <i class="icon-quiz"></i>
             </div>
         </div>
     </section>
@@ -30,7 +31,7 @@
         <h2>Fonctionnalités principales</h2>
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon">👨‍🏫</div>
+                <div class="feature-icon"></div>
                 <h3>Pour les enseignants</h3>
                 <ul>
                     <li>Création de quiz personnalisés</li>
@@ -41,7 +42,7 @@
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon">🎓</div>
+                <div class="feature-icon"></div>
                 <h3>Pour les étudiants</h3>
                 <ul>
                     <li>Interface intuitive</li>
@@ -52,7 +53,7 @@
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon">⚡</div>
+                <div class="feature-icon"></div>
                 <h3>Technologie</h3>
                 <ul>
                     <li>Interface responsive</li>

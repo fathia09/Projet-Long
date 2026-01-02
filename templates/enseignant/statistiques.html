@@ -42,6 +42,9 @@
         <a href="{{ url_for('enseignant.export_quiz', quiz_id=quiz.id) }}">
             <button>Exporter en CSV</button>
         </a>
+         <a href="{{ url_for('enseignant.export_quiz_pdf', quiz_id=quiz.id) }}">
+            <button>Exporter en PDF</button>
+        </a>
         <a href="{{ url_for('enseignant.dashboard') }}">
             <button>Retour au tableau de bord</button>
         </a>

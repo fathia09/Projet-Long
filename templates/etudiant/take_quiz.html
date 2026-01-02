@@ -3,6 +3,7 @@
 {% block title %}Passer le quiz{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/etudiant/styleTakeQuiz.css') }}">
 <div class="container">
     <h2>{{ quiz.titre }}</h2>
     <p>Durée totale: {{ quiz.duree }} minutes</p>
@@ -53,7 +54,7 @@
         </div>
         
         <div class="navigation">
-            <button type="button" id="prev-btn">Précédent</button>
+            <!-- <button type="button" id="prev-btn">Précédent</button> -->
             <button type="button" id="next-btn">Suivant</button>
             <button type="submit" id="submit-btn" style="display: none;">Soumettre le quiz</button>
         </div>
@@ -65,4 +66,41 @@
     window.quizId = {{ quiz_id }};
 </script>
 <script src="{{ url_for('static', filename='js/timer.js') }}"></script>
+<script>
+window.addEventListener("popstate", function(event) {
+    location.replace(location.href);
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    let currentQuestionIndex = 0;
+    const questionDivs = document.querySelectorAll(".question-container");
+    const nextBtn = document.getElementById("next-btn");
+    const submitBtn = document.getElementById("submit-btn");
+
+    showQuestion(0);
+
+    function showQuestion(index) {
+        questionDivs.forEach((q, i) => {
+            q.style.display = i === index ? "block" : "none";
+        });
+    }
+
+    nextBtn.addEventListener("click", function() {
+        if (currentQuestionIndex < questionDivs.length - 1) {
+            currentQuestionIndex++;
+            showQuestion(currentQuestionIndex);
+
+            if (currentQuestionIndex === questionDivs.length - 1) {
+                nextBtn.style.display = "none";
+                submitBtn.style.display = "inline-block";
+            }
+        }
+    });
+
+});
+</script>
+
 {% endblock %}
