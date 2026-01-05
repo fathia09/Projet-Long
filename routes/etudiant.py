@@ -133,6 +133,52 @@ def submit_quiz(quiz_id):
     # Rediriger vers la page des résultats
     return redirect(url_for('etudiant.view_results', quiz_id=quiz_id))
 
+
+@etudiant_bp.route('/quiz/<int:quiz_id>/feedback', methods=['POST'])
+@login_required
+@etudiant_required
+def submit_feedback(quiz_id):
+    db = get_db()
+    c = db.cursor()
+    
+    # Vérifier que l'étudiant a bien passé ce quiz
+    c.execute('SELECT * FROM resultat_quiz WHERE id_quiz = ? AND id_etudiant = ?', 
+              (quiz_id, session['user_id']))
+    if not c.fetchone():
+        flash('Vous devez avoir passé le quiz pour donner un feedback')
+        return redirect(url_for('etudiant.dashboard'))
+    
+    # Vérifier si un feedback existe déjà
+    c.execute('SELECT * FROM feedback WHERE id_quiz = ? AND id_etudiant = ?', 
+              (quiz_id, session['user_id']))
+    if c.fetchone():
+        flash('Vous avez déjà donné un feedback pour ce quiz')
+        return redirect(url_for('etudiant.view_results', quiz_id=quiz_id))
+    
+    # Récupérer les données du formulaire
+    texte = request.form.get('texte', '').strip()
+    note = request.form.get('note')
+    
+    if not texte:
+        flash('Le commentaire est obligatoire')
+        return redirect(url_for('etudiant.view_results', quiz_id=quiz_id))
+    
+    # Insérer le feedback
+    if note:
+        c.execute('INSERT INTO feedback (id_quiz, id_etudiant, texte, note) VALUES (?, ?, ?, ?)',
+                 (quiz_id, session['user_id'], texte, int(note)))
+    else:
+        c.execute('INSERT INTO feedback (id_quiz, id_etudiant, texte) VALUES (?, ?, ?)',
+                 (quiz_id, session['user_id'], texte))
+    
+    db.commit()
+    db.close()
+    
+    flash('Merci pour votre feedback!')
+    return redirect(url_for('etudiant.view_results', quiz_id=quiz_id))
+
+
+
 @etudiant_bp.route('/results/<int:quiz_id>')
 @login_required
 @etudiant_required
@@ -151,20 +197,29 @@ def view_results(quiz_id):
     
     resultat = row_to_dict(c.fetchone())
     
-    # Récupérer les informations du quiz pour les stats
+    if not resultat:
+        flash('Résultat non trouvé!')
+        return redirect(url_for('etudiant.dashboard'))
+    
+    # Récupérer les informations du quiz
     c.execute('SELECT * FROM question WHERE id_quiz = ?', (quiz_id,))
     questions = [row_to_dict(row) for row in c.fetchall()]
     
     total_questions = len(questions)
     points_max = sum(q['bareme'] for q in questions)
     
-    db.close()
+    # Récupérer le feedback existant
+    c.execute('SELECT * FROM feedback WHERE id_quiz = ? AND id_etudiant = ?', 
+              (quiz_id, session['user_id']))
+    feedback_existant = row_to_dict(c.fetchone())
     
-    if not resultat:
-        flash('Résultat non trouvé!')
-        return redirect(url_for('etudiant.dashboard'))
+    db.close()
     
     return render_template('etudiant/results.html', 
                          resultat=resultat, 
                          total_questions=total_questions,
-                         points_max=points_max)
+                         points_max=points_max,
+                     
+
+    feedback_existant=feedback_existant)
+

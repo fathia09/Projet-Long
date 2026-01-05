@@ -14,6 +14,13 @@
                 <strong>{{ item.question.enonce }}</strong>
                 <span>({{ item.question.type }}, {{ item.question.bareme }} pts, {{ item.question.duree }}s)</span>
             </div>
+
+
+            <!-- Actions -->
+            <div class="action-links">
+                <a href="{{ url_for('enseignant.edit_question', question_id=item.question.id) }}">Modifier</a>
+                <a href="{{ url_for('enseignant.delete_question', question_id=item.question.id) }}">Supprimer</a>
+            </div>
             
             {% if item.choix %}
             <ul class="choices-list">
