@@ -4,58 +4,6 @@
 
 {% block content %}
 <div class="gestion-users-container">
-<<<<<<< HEAD
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
-    <i class="fas fa-plus me-2"></i>Ajouter un utilisateur
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addUserModalLabel">Ajouter un utilisateur</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addUserForm" method="POST" action="{{ url_for('admin.add_user') }}">
-                    <div class="mb-3">
-                        <label for="nom" class="form-label">Nom</label>
-                        <input type="text" class="form-control" id="nom" name="nom" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="prenom" class="form-label">Prénom</label>
-                        <input type="text" class="form-control" id="prenom" name="prenom" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="role" class="form-label">Rôle</label>
-                        <select class="form-control" id="role" name="role" required>
-                            <option value="">Sélectionner un rôle</option>
-                            <option value="admin">Admin</option>
-                             <option value="user">enseignant</option> 
-                             <option value="user">étudiant</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Mot de passe</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-primary" onclick="document.getElementById('addUserForm').submit()">Ajouter</button>
-            </div>
-        </div>
-    </div>
-</div>
-    <div class="table-responsive">
-=======
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
         <i class="fas fa-plus me-2"></i>Ajouter un utilisateur
@@ -154,7 +102,6 @@
 
     <!-- Users Table -->
     <div class="table-responsive mt-3">
->>>>>>> origin/main
         <table class="gestion-users-table">
             <thead class="table-dark">
                 <tr>
@@ -175,14 +122,6 @@
                     <td><span class="badge bg-info">{{ user.role }}</span></td>
                     <td class="date-creation">{{ user.date_creation.strftime("%d/%m/%Y") if user.date_creation else "" }}</td>
                     <td class="text-center">
-<<<<<<< HEAD
-                        <a href="{{ url_for('admin.gestion_users', user_id=user.id) }}" class="btn btn-sm btn-warning">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="{{ url_for('admin.gestion_users', user_id=user.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr?')">
-                            <i class="fas fa-trash"></i>
-                        </a>
-=======
                         <button type="button" class="btn btn-sm btn-warning" 
                                 onclick="openEditModal({{ user.id }}, '{{ user.nom }}', '{{ user.prenom }}', '{{ user.email }}', '{{ user.role }}')">
                             <i class="fas fa-edit"></i>
@@ -196,7 +135,6 @@
         <input type="hidden" name="user_id" value="{{ user.id }}">
     </form>
 
->>>>>>> origin/main
                     </td>
                 </tr>
                 {% else %}
@@ -208,9 +146,7 @@
         </table>
     </div>
 </div>
-<<<<<<< HEAD
-=======
-
+{% block scripts %}
 <script>
     function openEditModal(id, nom, prenom, email, role) {
         document.getElementById('editUserId').value = id;
@@ -222,6 +158,8 @@
         var editModal = new bootstrap.Modal(document.getElementById('editUserModal'));
         editModal.show();
     }
+
+    console.log("JS chargé");
 </script>
->>>>>>> origin/main
+{% endblock %}
 {% endblock %}

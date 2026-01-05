@@ -45,18 +45,19 @@ def gestion_users():
     for row in users:
         user = dict(row)
 
-        # ✅ Conversion de la date pour que strftime fonctionne dans le template
-    if user["date_creation"]:
-        try:
-        # Cas avec microsecondes
-            user["date_creation"] = datetime.strptime(user["date_creation"], "%Y-%m-%d %H:%M:%S.%f")
-        except ValueError:
-        # Cas sans microsecondes
-            user["date_creation"] = datetime.strptime(user["date_creation"], "%Y-%m-%d %H:%M:%S")
+        # Conversion de la date pour que strftime fonctionne dans le template
+        if user["date_creation"]:
+            try:
+            # Cas avec microsecondes
+                user["date_creation"] = datetime.strptime(user["date_creation"], "%Y-%m-%d %H:%M:%S.%f")
+            except ValueError:
+            # Cas sans microsecondes
+                user["date_creation"] = datetime.strptime(user["date_creation"], "%Y-%m-%d %H:%M:%S")
 
-    users_list.append(user)
+        users_list.append(user)
 
     return render_template('admin/gestion_users.html', users=users_list)
+
 
 
 @admin_bp.route('/add_user', methods=['POST'])
@@ -107,6 +108,14 @@ def add_user():
 
 
 
+@admin_bp.route('/gestion_examens')
+@admin_required
+def gestion_examens():
+    """Gestion des examens/quiz (admin)"""
+    return render_template('admin/gestion_exam.html')
+
+
+
 @admin_bp.route('/settings')
 @admin_required
 def settings():
@@ -116,5 +125,27 @@ def settings():
 @admin_bp.route('/reports')
 @admin_required 
 def reports():
-    """Rapports et statistiques"""
-    return render_template('admin/reports.html')
+    """Rapports et statistiques (admin)"""
+    db = get_db()
+    c = db.cursor()
+
+    c.execute("SELECT COUNT(*) FROM user")
+    total_users = c.fetchone()[0]
+
+    c.execute("""
+        SELECT r.user_role, COUNT(*) 
+        FROM user u
+        JOIN role r ON u.id_role = r.id
+        GROUP BY r.user_role
+    """)
+    roles_count = {row[0]: row[1] for row in c.fetchall()}
+
+    c.execute("SELECT COUNT(*) FROM quiz")
+    total_exams = c.fetchone()[0]
+
+    return render_template(
+        "admin/reports.html",
+        total_users=total_users,
+        roles_count=roles_count,
+        total_exams=total_exams
+    )
