@@ -178,3 +178,162 @@ body {
     font-size: 14px;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Styles pour la section feedback */
+.feedback-section {
+    margin: 30px 0;
+    padding: 25px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.feedback-section h3 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.existing-feedback {
+    background: white;
+    padding: 20px;
+    border-radius: 6px;
+    border: 1px solid #d4edda;
+}
+
+.feedback-content {
+    margin-top: 15px;
+}
+
+.feedback-content p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+/* Formulaire de feedback */
+.feedback-form {
+    background: white;
+    padding: 25px;
+    border-radius: 6px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+/* Système de notation par étoiles - CORRIGÉ */
+.star-rating {
+    display: flex;
+    font-size: 28px;
+    direction: rtl; /* Right-to-left pour le hover */
+}
+
+.star-input {
+    display: none;
+}
+
+.star-label {
+    color: #ddd;
+    cursor: pointer;
+    padding: 0 3px;
+    transition: color 0.2s;
+}
+
+/* Quand on survole une étoile, elle et toutes celles à gauche deviennent jaunes */
+.star-label:hover,
+.star-label:hover ~ .star-label {
+    color: #f39c12;
+}
+
+/* Quand une étoile est sélectionnée, elle et toutes celles à gauche restent jaunes */
+.star-input:checked ~ .star-label {
+    color: #f39c12;
+}
+
+/* Garder les étoiles jaunes après la sélection quand on survole */
+.star-input:checked ~ .star-label:hover {
+    color: #f39c12;
+}
+
+/* Boutons feedback */
+.btn-submit-feedback {
+    background: #27ae60;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.btn-submit-feedback:hover {
+    background: #219653;
+}
+
+.btn-skip {
+    color: #7f8c8d;
+    text-decoration: none;
+    padding: 12px 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.btn-skip:hover {
+    background: #f8f9fa;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .feedback-section {
+        padding: 15px;
+    }
+    
+    .star-rating {
+        font-size: 24px;
+    }
+    
+    .btn-submit-feedback, .btn-skip {
+        width: 100%;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+}

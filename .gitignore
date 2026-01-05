@@ -1,6 +1,7 @@
 venv/
-_pycache_/
+pycache/
 *.pyc
 .env
 instance/
 .vscode/
+./quiz.db

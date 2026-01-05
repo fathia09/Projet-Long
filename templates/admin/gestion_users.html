@@ -122,14 +122,6 @@
                     <td><span class="badge bg-info">{{ user.role }}</span></td>
                     <td class="date-creation">{{ user.date_creation.strftime("%d/%m/%Y") if user.date_creation else "" }}</td>
                     <td class="text-center">
-<<<<<<< HEAD
-                        <a href="{{ url_for('admin.gestion_users', user_id=user.id) }}" class="btn btn-sm btn-warning">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="{{ url_for('admin.gestion_users', user_id=user.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr?')">
-                            <i class="fas fa-trash"></i>
-                        </a>
-=======
                         <button type="button" class="btn btn-sm btn-warning" 
                                 onclick="openEditModal({{ user.id }}, '{{ user.nom }}', '{{ user.prenom }}', '{{ user.email }}', '{{ user.role }}')">
                             <i class="fas fa-edit"></i>
@@ -143,7 +135,6 @@
         <input type="hidden" name="user_id" value="{{ user.id }}">
     </form>
 
->>>>>>> origin/main
                     </td>
                 </tr>
                 {% else %}
@@ -155,8 +146,6 @@
         </table>
     </div>
 </div>
-<<<<<<< HEAD
-=======
 
 <script>
     function openEditModal(id, nom, prenom, email, role) {
@@ -170,5 +159,4 @@
         editModal.show();
     }
 </script>
->>>>>>> origin/main
 {% endblock %}
