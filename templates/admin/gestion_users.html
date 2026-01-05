@@ -146,7 +146,7 @@
         </table>
     </div>
 </div>
-
+{% block scripts %}
 <script>
     function openEditModal(id, nom, prenom, email, role) {
         document.getElementById('editUserId').value = id;
@@ -158,5 +158,8 @@
         var editModal = new bootstrap.Modal(document.getElementById('editUserModal'));
         editModal.show();
     }
+
+    console.log("JS chargé");
 </script>
+{% endblock %}
 {% endblock %}
