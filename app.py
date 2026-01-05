@@ -49,7 +49,6 @@ def dashboard():
     from flask import session
     if session.get('role') == 'enseignant':
         return redirect(url_for('enseignant.dashboard'))
-<<<<<<< HEAD
     elif session.get('role') == 'etudiant':
         return redirect(url_for('etudiant.dashboard'))
     elif session.get('role') == 'admin':
@@ -57,12 +56,6 @@ def dashboard():
     else:
         return redirect(url_for('index'))
     
-=======
-    elif session.get('role') == 'admin':
-        return redirect(url_for('admin.dashboard'))
-    return redirect(url_for('etudiant.dashboard'))
-
->>>>>>> origin/main
 # Gestion de la fermeture de la base de données
 app.teardown_appcontext(close_db)
 
