@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-from flask import Blueprint, flash, render_template, redirect, request, url_for, session
-from utils.decorators import admin_required
-from models.database import get_db
-from datetime import datetime
-from werkzeug.security import generate_password_hash
-
-
-admin_bp = Blueprint('admin', __name__)
-
-=======
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, send_file
 from models.database import get_db
 from utils.decorators import login_required, admin_required
@@ -20,7 +9,6 @@ import io
 admin_bp = Blueprint('admin', __name__)
 
 
->>>>>>> origin/main
 def row_to_dict(row):
     """Convertit un objet Row en dictionnaire"""
     if row is None:
@@ -60,17 +48,6 @@ def gestion_users():
         user = dict(row)
 
         # ✅ Conversion de la date pour que strftime fonctionne dans le template
-<<<<<<< HEAD
-    if user["date_creation"]:
-        try:
-        # Cas avec microsecondes
-            user["date_creation"] = datetime.strptime(user["date_creation"], "%Y-%m-%d %H:%M:%S.%f")
-        except ValueError:
-        # Cas sans microsecondes
-            user["date_creation"] = datetime.strptime(user["date_creation"], "%Y-%m-%d %H:%M:%S")
-
-    users_list.append(user)
-=======
         if user["date_creation"]:
             try:
                 # Cas avec microsecondes
@@ -80,7 +57,6 @@ def gestion_users():
                 user["date_creation"] = datetime.strptime(user["date_creation"], "%Y-%m-%d %H:%M:%S")
 
         users_list.append(user)
->>>>>>> origin/main
 
     return render_template('admin/gestion_users.html', users=users_list)
 
@@ -131,8 +107,6 @@ def add_user():
     flash("Utilisateur ajouté avec succès ✅", "success")
     return redirect(url_for('admin.gestion_users'))
 
-<<<<<<< HEAD
-=======
 @admin_bp.route('/edit_user', methods=['POST'])
 @admin_required
 def edit_user():
@@ -552,7 +526,6 @@ def delete_exam(exam_id):
     flash("Examen supprimé")
     return redirect(url_for('admin.gestion_examens'))
 
->>>>>>> origin/main
 
 
 @admin_bp.route('/settings')
@@ -561,13 +534,6 @@ def settings():
     """Paramètres généraux du site"""
     return render_template('admin/settings.html')
 
-<<<<<<< HEAD
-@admin_bp.route('/reports')
-@admin_required 
-def reports():
-    """Rapports et statistiques"""
-    return render_template('admin/reports.html')
-=======
 
 @admin_bp.route('/reports')
 @admin_required
@@ -691,4 +657,3 @@ def exam_results():
         'admin/exam_results.html',
         examens=examens
     )
->>>>>>> origin/main
