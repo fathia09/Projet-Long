@@ -119,7 +119,11 @@
                     <td>{{ user.nom }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.prenom }}</td>
-                    <td><span class="badge bg-info">{{ user.role }}</span></td>
+                    <td class="text-center">
+                        <span class="role-badge role-{{ user.role }}">
+                            {{ user.role }}
+                        </span>
+                    </td>
                     <td class="date-creation">{{ user.date_creation.strftime("%d/%m/%Y") if user.date_creation else "" }}</td>
                     <td class="text-center">
                         <button type="button" class="btn btn-sm btn-warning" 

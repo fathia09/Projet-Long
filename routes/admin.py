@@ -50,16 +50,15 @@ def gestion_users():
         # ✅ Conversion de la date pour que strftime fonctionne dans le template
         if user["date_creation"]:
             try:
-            # Cas avec microsecondes
+                # Cas avec microsecondes
                 user["date_creation"] = datetime.strptime(user["date_creation"], "%Y-%m-%d %H:%M:%S.%f")
             except ValueError:
-            # Cas sans microsecondes
+                # Cas sans microsecondes
                 user["date_creation"] = datetime.strptime(user["date_creation"], "%Y-%m-%d %H:%M:%S")
 
         users_list.append(user)
 
     return render_template('admin/gestion_users.html', users=users_list)
-
 
 
 @admin_bp.route('/add_user', methods=['POST'])
@@ -108,13 +107,97 @@ def add_user():
     flash("Utilisateur ajouté avec succès ✅", "success")
     return redirect(url_for('admin.gestion_users'))
 
+@admin_bp.route('/edit_user', methods=['POST'])
+@admin_required
+def edit_user():
+    db = get_db()
+
+    # Récupération de l'ID depuis le formulaire
+    user_id = request.form.get('user_id')
+
+    if not user_id:
+        flash("ID utilisateur manquant.", "danger")
+        return redirect(url_for('admin.gestion_users'))
+
+    nom = request.form.get('nom')
+    prenom = request.form.get('prenom')
+    email = request.form.get('email')
+    role_name = request.form.get('role')
+    password = request.form.get('password')
+
+    # Vérification des champs obligatoires (sauf mot de passe)
+    if not nom or not prenom or not email or not role_name:
+        flash("Tous les champs sont obligatoires.", "danger")
+        return redirect(url_for('admin.gestion_users'))
+
+    # Récupération de l'id du rôle
+    role_row = db.execute(
+        "SELECT id FROM role WHERE user_role = ?",
+        (role_name,)
+    ).fetchone()
+
+    if not role_row:
+        flash("Rôle invalide.", "danger")
+        return redirect(url_for('admin.gestion_users'))
+
+    role_id = role_row["id"]
+
+    # Mise à jour selon que le mot de passe est rempli ou non
+    if password:
+        hashed_password = generate_password_hash(password)
+        db.execute(
+            "UPDATE user SET nom = ?, prenom = ?, email = ?, password_hash = ?, id_role = ? WHERE id = ?",
+            (nom, prenom, email, hashed_password, role_id, user_id)
+        )
+    else:
+        db.execute(
+            "UPDATE user SET nom = ?, prenom = ?, email = ?, id_role = ? WHERE id = ?",
+            (nom, prenom, email, role_id, user_id)
+        )
+
+    db.commit()
+    flash("Utilisateur modifié avec succès ✅", "success")
+    return redirect(url_for('admin.gestion_users'))
+
+@admin_bp.route('/delete_user', methods=['POST'])
+@admin_required
+def delete_user():
+    """
+    Supprime un utilisateur à partir de son ID.
+    """
+    db = get_db()
+
+    # Récupération de l'ID utilisateur depuis le formulaire POST
+    user_id = request.form.get('user_id')
+
+    if not user_id:
+        flash("ID utilisateur manquant.", "danger")
+        return redirect(url_for('admin.gestion_users'))
+
+    # Vérification que l'utilisateur existe
+    user = db.execute(
+        "SELECT * FROM user WHERE id = ?",
+        (user_id,)
+    ).fetchone()
+
+    if not user:
+        flash("Utilisateur introuvable.", "danger")
+        return redirect(url_for('admin.gestion_users'))
+
+    # Suppression de l'utilisateur
+    db.execute("DELETE FROM user WHERE id = ?", (user_id,))
+    db.commit()
+
+    flash("Utilisateur supprimé avec succès ✅", "success")
+    return redirect(url_for('admin.gestion_users'))
 
 
 @admin_bp.route('/gestion_examens')
+@login_required
 @admin_required
 def gestion_examens():
-    """Gestion des examens/quiz (admin)"""
-    return render_template('admin/gestion_exam.html')
+    db = get_db()
+    c = db.cursor()
 
     # ✅ Matières (sans toucher à ta logique)
     c.execute("SELECT * FROM matiere")
@@ -453,6 +536,7 @@ def settings():
 
 
 @admin_bp.route('/reports')
+@login_required
 @admin_required
 def reports():
         """Rapports et statistiques globales (dashboard admin)"""
@@ -460,7 +544,9 @@ def reports():
         c = db.cursor()
 
         # --- Statistiques utilisateurs ---
-        c.execute("SELECT COUNT(*) as count FROM user")
+        c.execute("""
+            SELECT COUNT(*) as count FROM user
+        """)
         total_users = c.fetchone()["count"]
         
         c.execute("""
@@ -487,7 +573,7 @@ def reports():
         exams_stats = []
         
         for ex in examens:
-            c.execute("SELECT * FROM resultat WHERE id_quiz = ?", (ex["id"],))
+            c.execute("SELECT * FROM resultat_quiz WHERE id_quiz = ?", (ex["id"],))
             resultats = c.fetchall()
             nb_etudiants = len(resultats)
             moyenne = round(sum(r["score"] for r in resultats) / nb_etudiants, 2) if nb_etudiants > 0 else 0
@@ -509,7 +595,7 @@ def reports():
             c.execute("SELECT * FROM quiz WHERE id = ?", (examen_id,))
             examen = row_to_dict(c.fetchone())
             if examen:
-                c.execute("SELECT * FROM resultat WHERE id_quiz = ?", (examen_id,))
+                c.execute("SELECT * FROM resultat_quiz WHERE id_quiz = ?", (examen_id,))
                 resultats_examen = c.fetchall()
                 if resultats_examen:
                     moyenne_examen = round(sum(r["score"] for r in resultats_examen) / len(resultats_examen), 2)
@@ -537,23 +623,40 @@ def exam_results():
     db = get_db()
     c = db.cursor()
 
-    c.execute("SELECT COUNT(*) FROM user")
-    total_users = c.fetchone()[0]
+    # Récupérer tous les examens avec matière et enseignant
+    c.execute('''
+        SELECT q.*, m.nom AS matiere_nom, u.nom AS enseignant_nom, u.prenom AS enseignant_prenom
+        FROM quiz q
+        JOIN matiere m ON q.id_matiere = m.id
+        JOIN user u ON q.id_enseignant = u.id
+        ORDER BY q.date_debut DESC
+    ''')
+    examens_raw = c.fetchall()
 
-    c.execute("""
-        SELECT r.user_role, COUNT(*) 
-        FROM user u
-        JOIN role r ON u.id_role = r.id
-        GROUP BY r.user_role
-    """)
-    roles_count = {row[0]: row[1] for row in c.fetchall()}
+    examens = []
+    for exam in examens_raw:
+        exam_dict = row_to_dict(exam)
 
-    c.execute("SELECT COUNT(*) FROM quiz")
-    total_exams = c.fetchone()[0]
+        # Récupérer les résultats de l'examen
+        c.execute('''
+            SELECT r.*, u.nom, u.prenom 
+            FROM resultat r
+            JOIN user u ON r.id_etudiant = u.id
+            WHERE r.id_quiz = ?
+            ORDER BY r.score DESC
+        ''', (exam_dict['id'],))
+        resultats = [row_to_dict(row) for row in c.fetchall()]
+
+        # Ajouter les résultats à l'examen
+        exam_dict['resultats'] = resultats
+        exam_dict['matiere'] = {'nom': exam_dict.pop('matiere_nom')}
+        exam_dict['enseignant'] = {'nom': exam_dict.pop('enseignant_nom'), 'prenom': exam_dict.pop('enseignant_prenom')}
+
+        examens.append(exam_dict)
+
+    db.close()
 
     return render_template(
-        "admin/reports.html",
-        total_users=total_users,
-        roles_count=roles_count,
-        total_exams=total_exams
+        'admin/exam_results.html',
+        examens=examens
     )

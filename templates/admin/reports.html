@@ -8,7 +8,7 @@
 <div class="dashboard-container">
 
     <!-- --- Section Utilisateurs --- -->
-    <h2>Statistiques Utilisateurs</h2>
+    <h2 class="admin-title">Statistiques Utilisateurs</h2>
     <div class="stats-overview">
         <div class="stat-card">
             <h3>Total utilisateurs</h3>
@@ -29,14 +29,14 @@
     </div>
 
     <div class="stats-overview">
-        <div class="stat-card" style="width: 100%;">
+        <div class="stat-card full">
             <h3>Répartition des rôles</h3>
             <canvas id="rolesChart" height="120"></canvas>
         </div>
     </div>
 
     <!-- --- Section Examens Globaux --- -->
-    <h2>Statistiques Examens</h2>
+    <h2 class="admin-title">Statistiques Examens</h2>
     <div class="stats-overview">
         <div class="stat-card">
             <h3>Total examens</h3>
@@ -65,8 +65,12 @@
     </table>
 
     <!-- --- Graphiques --- -->
-    <h2>Notes des examens</h2>
-    <canvas id="examsChart" width="400" height="200"></canvas>
+    <div class="stats-overview">
+        <div class="stat-card full">
+            <h3>Notes des examens</h3>
+            <canvas id="examsChart" width="400" height="200"></canvas>
+        </div>
+    </div>
 
     <!-- --- Section Détails d’un examen spécifique (optionnelle) --- -->
     {% if examen %}

@@ -1,12 +1,5 @@
-/* Reset et base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 h1 {
-  color: #93441A;
+  color: var(--primary);
   text-align: center;
   margin: 40px 0 40px;
   font-size: 32px;
@@ -17,21 +10,22 @@ h1 {
   max-width: 1200px;
   margin: 0 auto 40px;
   padding: 30px;
-  background-color: #EEE6D8;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255,255,255,0.55); 
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: var(--border);
 }
 
 .dashboard-section h2 {
-  color: #93441A;
+  color: var(--primary);
   margin-bottom: 25px;
   font-size: 24px;
-  border-bottom: 3px solid #DAAB3A;
+  border-bottom: 3px solid var(--highlight);
   padding-bottom: 10px;
 }
 
 .dashboard-section p {
-  color: #93441A;
+  color: var(--text-muted);
   font-style: italic;
 }
 
@@ -43,36 +37,37 @@ h1 {
 }
 
 .quiz-card {
-  background-color: #e5e7e6;
-  border-radius: 8px;
+  background-color: var(--surface);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
+  border: var(--border);
 }
 
 .quiz-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
 }
 
 .quiz-card-header {
   padding: 20px;
-  background: linear-gradient(135deg, #DAAB3A 0%, #B67332 100%);
-  color: #EEE6D8;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: var(--surface);
 }
 
 .quiz-card-title {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 8px;
-  color: #EEE6D8;
+  color: var(--surface);
 }
 
 .quiz-card-subject {
   font-size: 14px;
-  color: #e5e7e6;
+  color: rgba(255,255,255,0.85);
   margin: 0;
 }
 
@@ -81,14 +76,14 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #e5e7e6;
+  background-color: rgba(255,255,255,0.35);
 }
 
 .quiz-card-duration {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #93441A;
+  color: var(--text);
   font-weight: bold;
   font-size: 14px;
 }
@@ -100,20 +95,20 @@ h1 {
 
 .quiz-card-button {
   padding: 8px 20px;
-  background-color: #DAAB3A;
-  color: #93441A;
+  background-color: var(--primary);
+  color: var(--surface);
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.25s ease, transform 0.15s ease;
   white-space: nowrap;
 }
 
 .quiz-card-button:hover {
-  background-color: #B67332;
-  color: #EEE6D8;
+  background-color: var(--accent);
+  color: var(--surface);
 }
 
 .quiz-card a {
@@ -128,8 +123,8 @@ h1 {
 }
 
 .dashboard-section table thead {
-  background-color: #B67332;
-  color: #EEE6D8;
+  background-color: var(--primary);
+  color: var(--surface);
 }
 
 .dashboard-section table th {
@@ -141,13 +136,13 @@ h1 {
 
 .dashboard-section table td {
   padding: 12px 15px;
-  border-bottom: 1px solid #DAAB3A;
-  color: #93441A;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  color: var(--text);
   font-size: 14px;
 }
 
 .dashboard-section table tbody tr:hover {
-  background-color: #DAAB3A;
+  background-color: var(--surface-2);
 }
 
 .dashboard-section table tbody tr:last-child td {
@@ -155,14 +150,14 @@ h1 {
 }
 
 .dashboard-section table a {
-  color: #B67332;
+  color: var(--primary);
   text-decoration: none;
   font-weight: bold;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
 }
 
 .dashboard-section table a:hover {
-  color: #93441A;
+  color: var(--accent);
   text-decoration: underline;
 }
 
