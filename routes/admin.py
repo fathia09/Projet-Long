@@ -536,6 +536,7 @@ def settings():
 
 
 @admin_bp.route('/reports')
+@login_required
 @admin_required
 def reports():
         """Rapports et statistiques globales (dashboard admin)"""
@@ -543,7 +544,9 @@ def reports():
         c = db.cursor()
 
         # --- Statistiques utilisateurs ---
-        c.execute("SELECT COUNT(*) as count FROM user")
+        c.execute("""
+            SELECT COUNT(*) as count FROM user
+        """)
         total_users = c.fetchone()["count"]
         
         c.execute("""
@@ -570,7 +573,7 @@ def reports():
         exams_stats = []
         
         for ex in examens:
-            c.execute("SELECT * FROM resultat WHERE id_quiz = ?", (ex["id"],))
+            c.execute("SELECT * FROM resultat_quiz WHERE id_quiz = ?", (ex["id"],))
             resultats = c.fetchall()
             nb_etudiants = len(resultats)
             moyenne = round(sum(r["score"] for r in resultats) / nb_etudiants, 2) if nb_etudiants > 0 else 0
@@ -592,7 +595,7 @@ def reports():
             c.execute("SELECT * FROM quiz WHERE id = ?", (examen_id,))
             examen = row_to_dict(c.fetchone())
             if examen:
-                c.execute("SELECT * FROM resultat WHERE id_quiz = ?", (examen_id,))
+                c.execute("SELECT * FROM resultat_quiz WHERE id_quiz = ?", (examen_id,))
                 resultats_examen = c.fetchall()
                 if resultats_examen:
                     moyenne_examen = round(sum(r["score"] for r in resultats_examen) / len(resultats_examen), 2)

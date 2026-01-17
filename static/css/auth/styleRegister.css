@@ -1,17 +1,16 @@
-
 .login-container,
 .register-container {
   max-width: 400px;
   margin: 50px auto;
   padding: 40px;
-  background-color: #EEE6D8;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: var(--surface);
+  border-radius: var(--radius);;
+  box-shadow: var(--shadow);
 }
 
 .login-container h2,
 .register-container h2 {
-  color: #93441A;
+  color: var(--primary);
   margin-bottom: 30px;
   text-align: center;
   font-size: 28px;
@@ -29,16 +28,16 @@
 .login-container select,
 .register-container select {
   padding: 12px;
-  border: 2px solid #B67332;
+  border: 2px solid var(--primary);
   border-radius: 4px;
-  background-color: #e5e7e6;
-  color: #93441A;
+  background-color: var(--surface-2);
+  color: var(--text);
   font-size: 14px;
 }
 
 .login-container input::placeholder,
 .register-container input::placeholder {
-  color: #B67332;
+  color: var(--text-muted);
 }
 
 .login-container input:focus,
@@ -46,32 +45,34 @@
 .login-container select:focus,
 .register-container select:focus {
   outline: none;
-  border-color: #DAAB3A;
-  background-color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(255,87,51,.15);
+  background-color: var(--surface);
 }
 
 .login-container button,
 .register-container button {
   padding: 12px;
-  background-color: #DAAB3A;
-  color: #93441A;
+  background-color: var(--highlight);
+  color: #000;
   border: none;
   border-radius: 4px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all .25s ease;
 }
 
 .login-container button:hover,
 .register-container button:hover {
-  background-color: #B67332;
-  color: #EEE6D8;
+  background-color: var(--primary);
+  color: var(--surface);
+  transform: translateY(-2px);
 }
 
 .login-container p a,
 .register-container p a {
-  color: #B67332;
+  color: var(--primary);
   text-decoration: none;
   font-weight: bold;
   transition: color 0.3s ease;
@@ -79,6 +80,6 @@
 
 .login-container p a:hover,
 .register-container p a:hover {
-  color: #DAAB3A;
+  color: var(--accent);
   text-decoration: underline;
 }

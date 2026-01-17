@@ -3,6 +3,7 @@
 {% block title %}Passer le quiz{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/etudiant/styleTakeQuiz.css') }}">
 <div class="container">
     <h2>{{ quiz.titre }}</h2>

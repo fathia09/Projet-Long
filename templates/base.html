@@ -4,13 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Quiz App{% endblock %}</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
     
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <h1><a href="{{ url_for('dashboard') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" width="50" height="50" alt="Logo"></a></h1>
+            <a class="brand" href="{{ url_for('dashboard') }}">
+                <img class="brand-logo"
+                     src="{{ url_for('static', filename='images/LOGO.jpeg') }}"
+                     alt="EvalyQuiz logo">
+            </a>
             <div class="nav-links">
                 <a href="{{ url_for('index') }}">Accueil</a>
                 <a href="#">Démonstration</a>
