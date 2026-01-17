@@ -67,8 +67,17 @@ h1 {
 
 .quiz-card-subject {
   font-size: 14px;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255,255,255,0.85);             
+  font-style: normal;          
+  font-weight: 500;
   margin: 0;
+}
+
+.quiz-card-header .quiz-card-subject {
+  color: rgba(255,255,255,0.85) !important;
+  opacity: 1 !important;
+  filter: none !important;
+  font-style: normal !important;
 }
 
 .quiz-card-footer {
@@ -190,3 +199,4 @@ h1 {
     padding: 10px;
   }
 }
+
