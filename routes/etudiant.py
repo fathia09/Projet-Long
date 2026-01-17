@@ -19,15 +19,19 @@ def dashboard():
     db = get_db()
     c = db.cursor()
     
-    # Récupérer les quiz disponibles pour le groupe de l'étudiant
+    # Récupérer les quiz disponibles pour le groupe de l'étudiant et la somme des durée de chaque questions pour afficher la durée du quiz
     c.execute('''
-        SELECT DISTINCT q.*, m.nom as matiere_nom 
+        SELECT DISTINCT q.*, m.nom as matiere_nom, 
+        ROUND(COALESCE(SUM(qu.duree), 0) / 60.0, 2) as duree_totale_minutes
         FROM quiz q 
         JOIN matiere m ON q.id_matiere = m.id 
         LEFT JOIN quiz_groupe qg ON q.id = qg.id_quiz 
+        LEFT JOIN question qu ON q.id = qu.id_quiz
         WHERE q.status = "publié" 
         AND (qg.id_groupe = ? OR qg.id_groupe IS NULL)
+        GROUP BY q.id
     ''', (session['id_groupe'],))
+
     
     quiz_disponibles = [row_to_dict(row) for row in c.fetchall()]
     
