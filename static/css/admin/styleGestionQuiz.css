@@ -1,0 +1,78 @@
+/* ============================= */
+/* === GESTION DES QUIZ ===== */
+/* ============================= */
+
+.gestion-examens-container {
+  max-width: 1200px;
+  margin: 0 auto 60px;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 30px;
+}
+
+/* Carte */
+.gestion-examens-section {
+  background-color: var(--surface);
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  border: var(--border);
+}
+
+/* Titre de section */
+.gestion-examens-section h2 {
+  color: var(--primary);
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  border-bottom: 3px solid var(--highlight);
+  padding-bottom: 10px;
+}
+
+/* EXAMENS prend toute la largeur */
+.gestion-examens-section.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Formulaire */
+.gestion-examens-section form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* Bouton principal */
+.gestion-examens-section .admin-btn {
+  white-space: nowrap;
+}
+
+/* Table */
+.gestion-examens-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.gestion-examens-section thead {
+  background-color: var(--primary);
+  color: var(--surface);
+}
+
+.gestion-examens-section th {
+  padding: 12px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gestion-examens-section td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  color: var(--text);
+}
+
+.gestion-examens-section tbody tr:hover {
+  background-color: var(--surface-2);
+}

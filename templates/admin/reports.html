@@ -36,19 +36,19 @@
     </div>
 
     <!-- --- Section Examens Globaux --- -->
-    <h2 class="admin-title">Statistiques Examens</h2>
+    <h2 class="admin-title">Statistiques Quiz</h2>
     <div class="stats-overview">
         <div class="stat-card">
-            <h3>Total examens</h3>
+            <h3>Total quiz</h3>
             <div class="stat-value">{{ total_exams }}</div>
         </div>
     </div>
 
-    <h3>Détails des examens</h3>
+    <h3>Détails des quiz</h3>
     <table>
         <thead>
             <tr>
-                <th>Examen</th>
+                <th>Quiz</th>
                 <th>Nombre d'étudiants</th>
                 <th>Score moyen</th>
             </tr>
@@ -67,14 +67,14 @@
     <!-- --- Graphiques --- -->
     <div class="stats-overview">
         <div class="stat-card full">
-            <h3>Notes des examens</h3>
+            <h3>Notes des quiz</h3>
             <canvas id="examsChart" width="400" height="200"></canvas>
         </div>
     </div>
 
     <!-- --- Section Détails d’un examen spécifique (optionnelle) --- -->
     {% if examen %}
-    <h2>Statistiques de l'examen : {{ examen.titre }}</h2>
+    <h2>Statistiques du quiz : {{ examen.titre }}</h2>
     
     <div class="stats-overview">
         <div class="stat-card">

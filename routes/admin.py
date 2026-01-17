@@ -380,32 +380,22 @@ def create_exam():
     if request.method == 'POST':
         titre = request.form['titre']
         description = request.form.get('description')
-        duree = request.form['duree']
-        date_debut = request.form['date_debut']
-        date_fin = request.form['date_fin']
         id_matiere = request.form['matiere']
-        groupes = request.form.getlist('groupes')   # ✅ plusieurs groupes possibles
+        groupes = request.form.getlist('groupes')   
 
-        # ✅ ICI on récupère l’enseignant depuis le formulaire
         id_enseignant = request.form['id_user']
 
-        # ✅ Insertion correcte selon la vraie table quiz
         c.execute("""
             INSERT INTO quiz (
-                titre, description, duree,
-                date_debut, date_fin,
-                status, id_enseignant, id_matiere
+                titre, description, status, id_enseignant, id_matiere
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
         """, (
-            titre, description, duree,
-            date_debut, date_fin,
-            "brouillon", id_enseignant, id_matiere
+            titre, description, "brouillon", id_enseignant, id_matiere
         ))
 
         exam_id = c.lastrowid
 
-        # ✅ Liaison examen ↔ groupes
         for gid in groupes:
             c.execute("""
                 INSERT INTO quiz_groupe (id_quiz, id_groupe)
@@ -415,22 +405,15 @@ def create_exam():
         db.commit()
         db.close()
 
-        flash("Examen créé avec succès")
+        flash("Quiz créé avec succès")
         return redirect(url_for('admin.gestion_examens'))
 
-    # =========================
-    # PARTIE GET
-    # =========================
-
-    # ✅ Chargement des matières
     c.execute("SELECT * FROM matiere")
     matieres = [row_to_dict(row) for row in c.fetchall()]
 
-    # ✅ Chargement des groupes
     c.execute("SELECT * FROM groupe")
     groupes = [row_to_dict(row) for row in c.fetchall()]
 
-    # ✅ Chargement de TOUS les enseignants (comme les autres routes)
     c.execute("""
         SELECT user.id, user.nom, user.prenom
         FROM user
@@ -445,9 +428,8 @@ def create_exam():
         "admin/create_examen.html",
         matieres=matieres,
         groupes=groupes,
-        enseignants=enseignants   # ✅ pour le <select>
+        enseignants=enseignants   
     )
-
 
 @admin_bp.route('/exam/edit/<int:exam_id>', methods=['GET', 'POST'])
 @login_required
@@ -619,18 +601,17 @@ def reports():
 @login_required
 @admin_required
 def exam_results():
-    """Affiche les résultats de tous les examens du site"""
+    """Affiche les résultats de tous les quiz du site"""
     db = get_db()
     c = db.cursor()
 
-    # Récupérer tous les examens avec matière et enseignant
     c.execute('''
         SELECT q.*, m.nom AS matiere_nom, u.nom AS enseignant_nom, u.prenom AS enseignant_prenom
         FROM quiz q
         JOIN matiere m ON q.id_matiere = m.id
         JOIN user u ON q.id_enseignant = u.id
-        ORDER BY q.date_debut DESC
     ''')
+    
     examens_raw = c.fetchall()
 
     examens = []

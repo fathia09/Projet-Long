@@ -15,7 +15,8 @@
 .quiz-edit-container h3 {
   color: var(--primary);
   margin-bottom: 20px;
-  font-size: 22px;
+  font-size: 24px;
+  font-weight: 800; 
   border-bottom: 3px solid var(--highlight);
   padding-bottom: 10px;
 }
@@ -302,4 +303,21 @@
 .quiz-actions button{
   appearance: none;
   -webkit-appearance: none;
+}
+
+.page-title{
+  color: var(--primary);
+  text-align: center;
+  margin: 40px 0 50px;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.section-title{
+  color: var(--primary);
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 800;
+  border-bottom: 3px solid var(--highlight);
+  padding-bottom: 10px;
 }

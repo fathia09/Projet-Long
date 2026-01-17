@@ -1,17 +1,18 @@
 {% extends "admin/base_admin.html" %}
 
-{% block title %}Gestion des Examens{% endblock %}
+{% block title %}Gestion des Quiz{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/styleAdmin.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/styleGestionQuiz.css') }}">
 
-<h2 class="admin-title">Gestion des Examens</h2>
+<h2 class="admin-title">Gestion des Quiz</h2>
 
-<div class="admin-sections">
+<div class="gestion-examens-container">
 
 <!-- ==================== SECTION MATIÈRES ==================== -->
-<section class="admin-section">
-    <h2 class="admin-section-title">Matières</h2>
+<section class="gestion-examens-section">
+    <h2>Matières</h2>
 
     <!-- Formulaire d'ajout -->
     <form class="admin-form-row" method="post" action="{{ url_for('admin.add_matiere') }}">
@@ -106,8 +107,8 @@ function toggleEditForm(id) {
 
 
 <!-- ==================== SECTION GROUPES ==================== -->
-<section class="admin-section">
-    <h2 class="admin-section-title">Groupes</h2>
+<section class="gestion-examens-section">
+    <h2>Groupes</h2>
 
     <!-- Formulaire d'ajout -->
     <form class="admin-form-row" method="post" action="{{ url_for('admin.add_groupe') }}">
@@ -202,12 +203,12 @@ function toggleEditGroupeForm(id) {
 
 
 <!-- ==================== SECTION EXAMENS ==================== -->
-<section class="admin-section">
-    <h2 class="admin-section-title">Examens</h2>
+<section class="gestion-examens-section">
+    <h2>Quiz</h2>
 
     <a href="{{ url_for('admin.create_exam') }}"
         class="btn btn-primary admin-btn mb-3">
-            Créer un nouvel examen
+            Créer un nouvel quiz
     </a>
 
     <div class="admin-table-wrap">
