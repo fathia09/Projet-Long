@@ -60,7 +60,6 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 titre VARCHAR(200) NOT NULL,
                 description TEXT,
-                duree INTEGER,
                 date_debut TIMESTAMP,
                 date_fin TIMESTAMP,
                 status TEXT CHECK (status IN ('brouillon', 'publié', 'terminé')) DEFAULT 'brouillon',
