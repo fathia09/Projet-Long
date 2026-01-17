@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/etudiant/styleTakeQuiz.css') }}">
 <div class="container">
     <h2>{{ quiz.titre }}</h2>
-    <p>Durée totale: {{ quiz.duree }} minutes</p>
     
     <form id="quiz-form" method="post" action="{{ url_for('etudiant.submit_quiz', quiz_id=quiz_id) }}">
         <div id="quiz-content">
