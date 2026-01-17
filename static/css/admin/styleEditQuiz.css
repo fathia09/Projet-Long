@@ -1,137 +1,305 @@
-
-/* ================== SECTION EXAM ================== */
-section.edit-exam, section.existing-questions, section.add-question {
-    background-color: #f9f9f9;
-    padding: 20px;
-    margin-bottom: 25px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+.quiz-edit-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
 }
 
-section.edit-exam h2,
-section.existing-questions h3,
-section.add-question h3 {
-    margin-bottom: 15px;
-    color: #333;
-    font-family: 'Arial', sans-serif;
+.quiz-edit-container h2 {
+  color: var(--primary);
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 28px;
+  font-weight: 700;
 }
 
-/* ================== FORMULAIRES ================== */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+.quiz-edit-container h3 {
+  color: var(--primary);
+  margin-bottom: 20px;
+  font-size: 22px;
+  border-bottom: 3px solid var(--highlight);
+  padding-bottom: 10px;
 }
 
-form input[type="text"],
-form input[type="number"],
-form input[type="datetime-local"],
-form textarea,
-form select {
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-    width: 100%;
-    box-sizing: border-box;
-    transition: border-color 0.2s;
+/* Section des questions existantes */
+.existing-questions {
+  background-color: var(--surface);
+  padding: 30px;
+  border-radius: var(--radius);
+  margin-bottom: 30px;
+  box-shadow: var(--shadow);
+  border: var(--border);
 }
 
-form input:focus,
-form textarea:focus,
-form select:focus {
-    outline: none;
-    border-color: #007BFF;
-}
-
-/* Boutons */
-button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s;
-}
-
-button.btn-save {
-    background-color: #007BFF;
-    color: #fff;
-}
-
-button.btn-save:hover {
-    background-color: #0056b3;
-}
-
-button.btn-publish {
-    background-color: #28a745;
-    color: #fff;
-}
-
-button.btn-publish:hover {
-    background-color: #1e7e34;
-}
-
-/* ================== QUESTIONS EXISTANTES ================== */
 .question {
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    background-color: #fff;
+  background-color: var(--surface-2);
+  padding: 15px;
+  border-left: 4px solid var(--highlight);
+  margin-bottom: 15px;
+  border-radius: 10px;
 }
 
 .question-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  color: var(--text);
 }
 
-.action-links a {
-    margin-right: 12px;
-    color: #007BFF;
-    text-decoration: none;
-    font-size: 0.95rem;
+.question-header strong {
+  flex: 1;
 }
 
-.action-links a:hover {
-    text-decoration: underline;
+.question-header span {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: normal;
 }
 
 .choices-list {
-    margin-top: 8px;
-    padding-left: 20px;
+  list-style: none;
+  margin-top: 10px;
+  padding-left: 20px;
 }
 
 .choices-list li {
-    margin-bottom: 4px;
+  color: var(--text);
+  margin: 5px 0;
+  padding: 5px;
 }
 
-/* ================== AJOUT QUESTION ================== */
-#choix_section, #numerique_section {
-    margin-top: 8px;
-    padding: 10px;
-    border: 1px dashed #ccc;
-    border-radius: 6px;
-    background-color: #f1f1f1;
+.choices-list li::before {
+  content: "• ";
+  color: var(--accent);
+  font-weight: bold;
+  margin-right: 8px;
 }
 
-.choix-item {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 6px;
+/* Section d'ajout de question */
+.add-question {
+  background-color: var(--surface);
+  padding: 30px;
+  border-radius: var(--radius);
+  margin-bottom: 30px;
+  box-shadow: var(--shadow);
+  border: var(--border);
+}
+
+.add-question form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.add-question input,
+.add-question textarea,
+.add-question select {
+  padding: 12px;
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+  background-color: var(--surface-2);
+  color: var(--text);
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+}
+
+.add-question input::placeholder,
+.add-question textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.add-question input:focus,
+.add-question textarea:focus,
+.add-question select:focus {
+  outline: none;
+  border-color: var(--accent);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 2px rgba(255, 87, 51, 0.15);
+}
+
+.add-question textarea {
+  resize: vertical;
 }
 
 .form-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 15px;
 }
 
-@media (max-width: 600px) {
-    .form-row {
-        flex-direction: column;
-    }
+.form-row input {
+  flex: 1;
+}
+
+#choix_section {
+  background-color: var(--surface-2);
+  padding: 15px;
+  border-radius: 10px;
+  border: var(--border);
+}
+
+#choix_section p {
+  color: var(--primary);
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.choix-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.choix-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.choix-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--highlight);
+}
+
+.choix-item input[type="text"] {
+  flex: 1;
+}
+
+.add-question button {
+  padding: 12px;
+  background-color: var(--highlight);
+  color: var(--text);
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  margin-top: 10px;
+}
+
+.add-question button:hover {
+  background-color: var(--primary);
+  color: var(--surface);
+}
+
+/* Section des actions */
+.quiz-actions {
+  background-color: var(--surface);
+  padding: 30px;
+  border-radius: var(--radius);
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  border: var(--border);
+}
+
+.quiz-actions button,
+.quiz-actions a button {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-publish {
+  background-color: var(--primary);
+  color: var(--surface);
+}
+
+.btn-publish:hover {
+  background-color: var(--primary);
+  color: var(--surface);
+}
+
+.btn-back {
+  background-color: var(--primary);
+  color: var(--surface);
+}
+
+.btn-back:hover {
+  background-color: var(--primary);
+  color: var(--surface);
+}
+
+.quiz-actions a {
+  text-decoration: none;
+}
+
+.edit-exam{
+  background-color: var(--surface);
+  padding: 30px;
+  border-radius: var(--radius);
+  margin-bottom: 30px;
+  box-shadow: var(--shadow);
+  border: var(--border);
+}
+
+.edit-exam form{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.edit-exam input,
+.edit-exam textarea,
+.edit-exam select{
+  padding: 12px;
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+  background-color: var(--surface-2);
+  color: var(--text);
+  font-size: 14px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.edit-exam input::placeholder,
+.edit-exam textarea::placeholder{
+  color: var(--text-muted);
+}
+
+.edit-exam input:focus,
+.edit-exam textarea:focus,
+.edit-exam select:focus{
+  outline: none;
+  border-color: var(--accent);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 2px rgba(255, 87, 51, 0.15);
+}
+
+.edit-exam label{
+  color: var(--text);
+  font-weight: 600;
+}
+
+.btn-save{
+  padding: 12px;
+  background-color: var(--highlight);
+  color: var(--text);
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-save:hover{
+  background-color: var(--primary);
+  color: var(--surface);
+}
+
+.quiz-actions a{
+  text-decoration: none;
+}
+
+.quiz-actions button{
+  appearance: none;
+  -webkit-appearance: none;
 }

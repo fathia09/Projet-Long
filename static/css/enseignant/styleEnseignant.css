@@ -1,13 +1,5 @@
-/* Reset et base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-
 h1 {
-  color: #93441A;
+  color: var(--primary);
   text-align: center;
   margin: 40px 0 30px;
   font-size: 32px;
@@ -23,17 +15,18 @@ h1 {
 }
 
 .dashboard-section {
-  background-color: #EEE6D8;
+  background-color: var(--surface);
   padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: var(--border);
 }
 
 .dashboard-section h2 {
-  color: #93441A;
+  color: var(--primary);
   margin-bottom: 20px;
   font-size: 22px;
-  border-bottom: 3px solid #DAAB3A;
+  border-bottom: 3px solid var(--highlight);
   padding-bottom: 10px;
 }
 
@@ -46,52 +39,54 @@ h1 {
 .dashboard-section input {
   flex: 1;
   padding: 10px;
-  border: 2px solid #B67332;
-  border-radius: 4px;
-  background-color: #e5e7e6;
-  color: #93441A;
+  background-color: var(--surface-2);
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+  color: var(--text);
   font-size: 14px;
 }
 
 .dashboard-section input::placeholder {
-  color: #B67332;
+  color: var(--text-muted);
 }
 
 .dashboard-section input:focus {
   outline: none;
-  border-color: #DAAB3A;
-  background-color: #fff;
+  border-color: var(--accent);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 2px rgba(255,87,51,0.15);
 }
 
 .dashboard-section button,
 .dashboard-section a button {
   padding: 10px 20px;
-  background-color: #DAAB3A;
-  color: #93441A;
+  background-color: var(--highlight);
+  color: #000;
   border: none;
   border-radius: 4px;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.25s ease;
   white-space: nowrap;
 }
 
 .dashboard-section button:hover,
 .dashboard-section a button:hover {
-  background-color: #B67332;
-  color: #EEE6D8;
+  background-color: var(--primary);
+  color: var(--surface);
+  transform: translateY(-2px);
 }
 
 .dashboard-section a {
-  color: #B67332;
+  color: var(--primary);
   text-decoration: none;
   font-weight: bold;
   transition: color 0.3s ease;
 }
 
 .dashboard-section a:hover {
-  color: #DAAB3A;
+  color: var(--accent);
 }
 
 .dashboard-section table {
@@ -101,8 +96,8 @@ h1 {
 }
 
 .dashboard-section table thead {
-  background-color: #B67332;
-  color: #EEE6D8;
+  background-color: var(--primary);
+  color: var(--surface);
 }
 
 .dashboard-section table th {
@@ -113,15 +108,15 @@ h1 {
 
 .dashboard-section table td {
   padding: 12px;
-  border-bottom: 1px solid #DAAB3A;
-  color: #93441A;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  color: var(--text);
 }
 
 .dashboard-section table tbody tr:hover {
-  background-color: #DAAB3A;
-  color: #93441A;
+  background-color: var(--surface-2);
+  color: var(--primary);
 }
 
 .dashboard-section table tbody tr:hover a {
-  color: #93441A;
+  color: var(--accent);
 }
