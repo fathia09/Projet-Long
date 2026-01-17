@@ -36,7 +36,7 @@
 
             <!-- Navigation -->
             <nav class="admin-nav">
-                <a href="/dashboard">
+                <a href="{{ url_for('admin.dashboard') }}">
                     <i class="fa-solid fa-gauge-high"></i> Tableau de bord
                 </a>
                 <a href="{{ url_for('admin.gestion_users') }}">
@@ -47,6 +47,9 @@
                 </a>
                 <a href="{{ url_for('admin.exam_results') }}">
                     <i class="fa-solid fa-chart-simple"></i> Résultats
+                </a>
+                <a href="{{ url_for('admin.reports') }}">
+                    <i class="fa-solid fa-chart-line"></i> Rapports
                 </a>
                 <a href="/logout">
                     <i class="fa-solid fa-gear"></i> déconnexion
