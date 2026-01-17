@@ -5,10 +5,10 @@
 {% block content %}
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/enseignant/styleCreateQuiz.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/styleCreateQuiz.css') }}">
 
 <div class="form-container">
-    <h2>Créer un examen</h2>
+    <h2 class="form-title">Créer un examen</h2>
         
     <form method="post" action="{{ url_for('admin.create_exam') }}">
         
