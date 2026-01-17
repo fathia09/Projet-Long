@@ -145,14 +145,14 @@ def create_quiz():
     if request.method == 'POST':
         titre = request.form['titre']
         description = request.form['description']
-        duree = request.form['duree']
+        # duree = request.form['duree']
         id_matiere = request.form['matiere']
         groupes = request.form.getlist('groupes')
         
         db = get_db()
         c = db.cursor()
-        c.execute('INSERT INTO quiz (titre, description, duree, id_enseignant, id_matiere) VALUES (?, ?, ?, ?, ?)', 
-                 (titre, description, duree, session['user_id'], id_matiere))
+        c.execute('INSERT INTO quiz (titre, description, id_enseignant, id_matiere) VALUES (?, ?, ?, ?)', 
+                 (titre, description, session['user_id'], id_matiere))
         quiz_id = c.lastrowid
         
         for groupe_id in groupes:
