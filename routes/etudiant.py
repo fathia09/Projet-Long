@@ -226,4 +226,3 @@ def view_results(quiz_id):
                      
 
     feedback_existant=feedback_existant)
-
