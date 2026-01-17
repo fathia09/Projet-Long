@@ -172,7 +172,6 @@ def create_quiz():
     db.close()
     return render_template('enseignant/create_quiz.html', matieres=matieres, groupes=groupes)
 
-
 @enseignant_bp.route('/quiz/<int:quiz_id>/edit', methods=['GET', 'POST'])
 @login_required
 @enseignant_required
@@ -208,9 +207,6 @@ def edit_quiz(quiz_id):
                 if not corrects:
                     flash("Erreur:Vous devez au moins selectionner au moins une bonne reponse.","error")
                     return redirect(url_for('enseignant.edit_quiz',quiz_id=quiz_id))
-                if type_q == 'QCM_simple'and len(corrects)>1:
-                    flash("Erreur:Un QCM simple ne peut avoir qu'une seule bonne reponse.","error")
-                    return redirect(url_for('enseignant.edit_quiz',quiz_id=quiz_id))
                 choix_valides=[c for c in choix if c.strip()]
                 if len(choix_valides)<2:
                     flash("Erreur:Un QCM doit avoir au moins 2 choix de réponses possibles.","error")
@@ -223,15 +219,6 @@ def edit_quiz(quiz_id):
                         est_correct = str(i) in corrects
                         c.execute('INSERT INTO choix_reponse (id_question, texte, est_correct) VALUES (?, ?, ?)', 
                                  (question_id, choix_texte, est_correct))
-            elif type_q=='numerique':
-                bonne_reponse_num=request.form.get('bonne_reponse_num')
-                if not bonne_reponse_num:
-                    flash("Erreur:Vous devez saisir une reponse numerique","error")
-                    return redirect(url_for('enseignant.edit_quiz',quiz_id=quiz_id))
-                c.execute('''INSERT INTO question(enonce,type,bareme,duree,id_quiz,id_enseignant) VALUES(?,?,?,?,?,?)''',(enonce,type_q,bareme,duree,quiz_id,session['user_id']))
-                question_id=c.lastrowid
-                c.execute('''INSERT INTO choix_reponse(id_question,texte,est_correct) VALUES(?,?,?)''',(question_id,bonne_reponse_num,1))
-
             else:
                 pass
             db.commit()
@@ -315,6 +302,11 @@ def export_quiz(quiz_id):
                     mimetype='text/csv', 
                     as_attachment=True, 
                     download_name=f'quiz_{quiz_id}_results.csv')
+
+
+
+
+
 
 
 @enseignant_bp.route('/export_pdf/<int:quiz_id>')
@@ -408,18 +400,3 @@ def export_quiz_content_pdf(quiz_id):
         as_attachment=True,
         download_name=f'Sujet_{quiz["titre"]}.pdf'
     )
-@enseignant_bp.route('/quiz/<int:quiz_id>/feedback')
-@login_required
-@enseignant_required
-def etudiant_feedback(quiz_id):
-    db= get_db()
-    c=db.cursor()
-    c.execute("SELECT titre FROM quiz WHERE id = ? AND id_enseignant = ?",(quiz_id,session['user_id']))
-    quiz=c.fetchone()
-    if not quiz:
-        flash("Quiz introuvable")
-        return redirect(url_for('enseignant.dashboard'))
-    c.execute('''SELECT texte, IFNULL(note, 0) as note,date_creation FROM feedback WHERE feedback.id_quiz = ? ORDER BY date_creation DESC''',(quiz_id,))
-    feedback=[row_to_dict(row) for row in c.fetchall()]
-    db.close()
-    return render_template('enseignant/feedback.html',quiz=quiz,feedback=feedback)

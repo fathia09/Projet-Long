@@ -80,7 +80,6 @@
                         <a href="{{ url_for('enseignant.statistiques', quiz_id=q.id) }}">Stats</a> | 
                         <a href="{{ url_for('enseignant.export_quiz', quiz_id=q.id) }}">Export</a> |
                         <a href="{{ url_for('enseignant.export_quiz_content_pdf', quiz_id=q.id) }}" title="Exporter en PDF">PDF</a> 
-                        <a href="{{ url_for('enseignant.etudiant_feedback', quiz_id=q.id) }}" title="Voir Avis">💬 Voir Avis</a>
                     </td>
                 </tr>
                 {% endfor %}
