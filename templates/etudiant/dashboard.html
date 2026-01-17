@@ -4,6 +4,7 @@
 
 {% block content %}
 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/etudiant/styleEtudiant.css') }}">
 
 <h1>Tableau de bord Étudiant</h1>
@@ -23,7 +24,7 @@
             <div class="quiz-card-footer">
                 <div class="quiz-card-duration">
                    
-                    <span>{{ q.duree }} min</span>
+                    <span>{{ q.duree_totale_minutes }} min</span>
                 </div>
                 <a href="{{ url_for('etudiant.take_quiz', quiz_id=q.id) }}">
                     <button class="quiz-card-button">Commencer</button>
