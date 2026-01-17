@@ -528,3 +528,12 @@ footer a:hover {
   margin: 12px auto 0;
   border-radius: 2px;
 }
+
+.admin-main h1{
+  text-align: center;
+  font-weight: 800;
+  font-size: 32px;
+  letter-spacing: 0.6px;
+  margin: 30px 0 40px;
+  color: var(--primary);
+}

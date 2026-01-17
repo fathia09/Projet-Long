@@ -3,6 +3,7 @@
 {% block title %}Statistiques du quiz{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/enseignant/styleStatistique.css') }}">
 <div class="stats-container">
     <h2>Statistiques du quiz: {{ quiz.titre }}</h2>
