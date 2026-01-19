@@ -33,7 +33,8 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nom VARCHAR(100) NOT NULL,
                 id_enseignant INTEGER NOT NULL,
-                FOREIGN KEY (id_enseignant) REFERENCES user (id)
+                FOREIGN KEY (id_enseignant) REFERENCES user (id),
+                UNIQUE(nom,id_enseignant)
             );
             
             CREATE TABLE IF NOT EXISTS user (
@@ -53,13 +54,16 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 id_enseignant INTEGER NOT NULL,
                 nom VARCHAR(100) NOT NULL,
-                FOREIGN KEY (id_enseignant) REFERENCES user (id)
+                FOREIGN KEY (id_enseignant) REFERENCES user (id),
+                UNIQUE(nom,id_enseignant)
             );
             
             CREATE TABLE IF NOT EXISTS quiz (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 titre VARCHAR(200) NOT NULL,
                 description TEXT,
+                date_debut TIMESTAMP,
+                date_fin TIMESTAMP,
                 status TEXT CHECK (status IN ('brouillon', 'publié', 'terminé')) DEFAULT 'brouillon',
                 id_enseignant INTEGER NOT NULL,
                 id_matiere INTEGER NOT NULL,
@@ -74,6 +78,7 @@ def init_db():
                 bareme FLOAT DEFAULT 1.0,
                 duree INTEGER DEFAULT 60,
                 id_quiz INTEGER,
+                banque_question INTEGER DEFAULT 0,
                 id_enseignant INTEGER NOT NULL,
                 FOREIGN KEY (id_quiz) REFERENCES quiz (id) ON DELETE CASCADE,
                 FOREIGN KEY (id_enseignant) REFERENCES user (id)
