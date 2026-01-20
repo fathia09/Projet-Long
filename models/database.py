@@ -62,8 +62,6 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 titre VARCHAR(200) NOT NULL,
                 description TEXT,
-                date_debut TIMESTAMP,
-                date_fin TIMESTAMP,
                 status TEXT CHECK (status IN ('brouillon', 'publié', 'terminé')) DEFAULT 'brouillon',
                 id_enseignant INTEGER NOT NULL,
                 id_matiere INTEGER NOT NULL,
@@ -105,7 +103,7 @@ def init_db():
                 id_quiz INTEGER NOT NULL,
                 id_etudiant INTEGER NOT NULL,
                 score FLOAT NOT NULL,
-                date_soumission TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                date_soumission TIMESTAMP DEFAULT (datetime('now','localtime')),
                 FOREIGN KEY (id_quiz) REFERENCES quiz (id),
                 FOREIGN KEY (id_etudiant) REFERENCES user (id),
                 UNIQUE(id_quiz, id_etudiant)
@@ -117,7 +115,7 @@ def init_db():
                 id_etudiant INTEGER NOT NULL,
                 texte TEXT NOT NULL,
                 note INTEGER CHECK (note >= 1 AND note <= 5),
-                date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                date_creation TIMESTAMP DEFAULT (datetime('now','localtime')),
                 FOREIGN KEY (id_quiz) REFERENCES quiz (id),
                 FOREIGN KEY (id_etudiant) REFERENCES user (id),
                 UNIQUE(id_quiz, id_etudiant)
