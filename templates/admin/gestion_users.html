@@ -40,6 +40,16 @@
                                 <option value="etudiant">Étudiant</option>
                             </select>
                         </div>
+                                    <div class="mb-3" id="groupeDiv" style="display:none;">
+                                    <label for="groupe" class="form-label">Groupe</label>
+                                    <select class="form-control" id="groupe" name="groupe">
+                                        <option value="">Sélectionner un groupe</option>
+                                        {% for g in groupes %}
+                                            <option value="{{ g.id }}">{{ g.nom }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
                         <div class="mb-3">
                             <label for="password" class="form-label">Mot de passe</label>
                             <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe" required>
@@ -55,50 +65,68 @@
     </div>
 
     <!-- Edit User Modal -->
-    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editUserModalLabel">Modifier l'utilisateur</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editUserForm" method="POST" action="{{ url_for('admin.edit_user') }}">
-                        <input type="hidden" id="editUserId" name="user_id">
-                        <div class="mb-3">
-                            <label for="editNom" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="editNom" name="nom" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editPrenom" class="form-label">Prénom</label>
-                            <input type="text" class="form-control" id="editPrenom" name="prenom" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editEmail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="editEmail" name="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editRole" class="form-label">Rôle</label>
-                            <select class="form-control" id="editRole" name="role" required>
-                                <option value="">Sélectionner un rôle</option>
-                                <option value="admin">Admin</option>
-                                <option value="enseignant">Enseignant</option>
-                                <option value="etudiant">Étudiant</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editPassword" class="form-label">Mot de passe (laisser vide pour ne pas changer)</label>
-                            <input type="password" class="form-control" id="editPassword" name="password" placeholder="Mot de passe">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button type="button" class="btn btn-warning" onclick="document.getElementById('editUserForm').submit()">Modifier</button>
-                </div>
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Modifier l'utilisateur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm" method="POST" action="{{ url_for('admin.edit_user') }}">
+                    <input type="hidden" id="editUserId" name="user_id">
+
+                    <div class="mb-3">
+                        <label for="editNom" class="form-label">Nom</label>
+                        <input type="text" class="form-control" id="editNom" name="nom" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPrenom" class="form-label">Prénom</label>
+                        <input type="text" class="form-control" id="editPrenom" name="prenom" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" name="email" required>
+                    </div>
+
+                    <!-- Rôle dynamique -->
+                    <div class="mb-3">
+                        <label for="editRole" class="form-label">Rôle</label>
+                        <select class="form-control" id="editRole" name="role" required>
+                            <option value="">Sélectionner un rôle</option>
+                            {% for r in roles %}
+                                <option value="{{ r }}" {% if r == selected_role %}selected{% endif %}>{{ r|capitalize }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Groupe dynamique (affiché seulement si étudiant) -->
+                    <div class="mb-3" id="editGroupeDiv" style="display:none;">
+                        <label for="editGroupe" class="form-label">Groupe</label>
+                        <select class="form-control" id="editGroupe" name="groupe">
+                            <option value="">Sélectionner un groupe</option>
+                            {% for g in groupes %}
+                                <option value="{{ g.id }}" {% if g.id == selected_groupe %}selected{% endif %}>{{ g.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPassword" class="form-label">Mot de passe (laisser vide pour ne pas changer)</label>
+                        <input type="password" class="form-control" id="editPassword" name="password" placeholder="Mot de passe">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-warning" onclick="document.getElementById('editUserForm').submit()">Modifier</button>
             </div>
         </div>
     </div>
+</div>
+
 
     <!-- Users Table -->
     <div class="table-responsive mt-3">
@@ -150,10 +178,6 @@
         </table>
     </div>
 </div>
-<<<<<<< HEAD
-{% block scripts %}
-=======
->>>>>>> origin/main
 <script>
     function openEditModal(id, nom, prenom, email, role) {
         document.getElementById('editUserId').value = id;
@@ -167,9 +191,45 @@
     }
 
     console.log("JS chargé");
+
+
+    document.getElementById('role').addEventListener('change', function() {
+        var role = this.value;
+        var groupeDiv = document.getElementById('groupeDiv');
+        
+        if (role === 'etudiant') {
+            groupeDiv.style.display = 'block'; // Affiche le champ
+            document.getElementById('groupe').setAttribute('required', 'required');
+        } else {
+            groupeDiv.style.display = 'none'; // Cache le champ
+            document.getElementById('groupe').removeAttribute('required');
+        }
+    });
+
+
+<!-- Script pour afficher le groupe seulement si rôle = étudiant -->
+
+document.getElementById('editRole').addEventListener('change', function() {
+    var role = this.value;
+    var groupeDiv = document.getElementById('editGroupeDiv');
+
+    if (role === 'etudiant') {
+        groupeDiv.style.display = 'block';
+        document.getElementById('editGroupe').setAttribute('required', 'required');
+    } else {
+        groupeDiv.style.display = 'none';
+        document.getElementById('editGroupe').removeAttribute('required');
+    }
+});
+
+// 🔹 Optionnel : afficher correctement le groupe si modal prérempli avec un étudiant
+window.addEventListener('DOMContentLoaded', function() {
+    var role = document.getElementById('editRole').value;
+    if (role === 'etudiant') {
+        document.getElementById('editGroupeDiv').style.display = 'block';
+        document.getElementById('editGroupe').setAttribute('required', 'required');
+    }
+});
 </script>
-<<<<<<< HEAD
-{% endblock %}
-=======
->>>>>>> origin/main
+
 {% endblock %}
